@@ -1,0 +1,173 @@
+{
+  "name": "PlanDocument",
+  "type": "object",
+  "properties": {
+    "plan_name": {
+      "type": "string",
+      "description": "Name of the plan"
+    },
+    "plan_type": {
+      "type": "string",
+      "enum": [
+        "pop",
+        "health_fsa",
+        "dcap",
+        "full_flex",
+        "simple_cafeteria"
+      ],
+      "description": "Type of Section 125 plan"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "complete"
+      ],
+      "default": "draft",
+      "description": "Status of the plan document"
+    },
+    "employer_name": {
+      "type": "string",
+      "description": "Legal name of the employer/company"
+    },
+    "employer_ein": {
+      "type": "string",
+      "description": "Employer Identification Number"
+    },
+    "employer_address": {
+      "type": "string",
+      "description": "Employer address"
+    },
+    "employer_city": {
+      "type": "string"
+    },
+    "employer_state": {
+      "type": "string"
+    },
+    "employer_zip": {
+      "type": "string"
+    },
+    "employer_phone": {
+      "type": "string"
+    },
+    "plan_number": {
+      "type": "string",
+      "description": "Three-digit plan number for ERISA"
+    },
+    "plan_year_start": {
+      "type": "string",
+      "format": "date",
+      "description": "Plan year start date"
+    },
+    "plan_year_end": {
+      "type": "string",
+      "format": "date",
+      "description": "Plan year end date"
+    },
+    "effective_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Original effective date of the plan"
+    },
+    "plan_administrator_name": {
+      "type": "string",
+      "description": "Name of the plan administrator"
+    },
+    "plan_administrator_title": {
+      "type": "string"
+    },
+    "plan_administrator_phone": {
+      "type": "string"
+    },
+    "plan_administrator_email": {
+      "type": "string"
+    },
+    "eligibility_class": {
+      "type": "string",
+      "description": "Description of eligible employee class"
+    },
+    "waiting_period": {
+      "type": "string",
+      "description": "Waiting period before eligibility"
+    },
+    "hours_required": {
+      "type": "number",
+      "description": "Minimum hours per week for eligibility"
+    },
+    "entry_dates": {
+      "type": "string",
+      "description": "When eligible employees can enter the plan"
+    },
+    "benefits_offered": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of benefits offered under the plan"
+    },
+    "fsa_max_election": {
+      "type": "number",
+      "description": "Maximum annual health FSA election amount"
+    },
+    "fsa_min_election": {
+      "type": "number",
+      "description": "Minimum annual health FSA election amount"
+    },
+    "fsa_grace_period": {
+      "type": "boolean",
+      "description": "Whether a grace period applies to FSA"
+    },
+    "fsa_carryover": {
+      "type": "boolean",
+      "description": "Whether carryover applies to FSA"
+    },
+    "fsa_carryover_amount": {
+      "type": "number",
+      "description": "Maximum carryover amount for FSA"
+    },
+    "dcap_max_election": {
+      "type": "number",
+      "description": "Maximum annual DCAP election amount"
+    },
+    "dcap_min_election": {
+      "type": "number",
+      "description": "Minimum annual DCAP election amount"
+    },
+    "employer_contribution": {
+      "type": "boolean",
+      "description": "Whether employer makes contributions"
+    },
+    "employer_contribution_amount": {
+      "type": "string",
+      "description": "Description of employer contribution"
+    },
+    "election_change_events": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Qualifying life events that allow mid-year changes"
+    },
+    "claims_administrator": {
+      "type": "string",
+      "description": "Name of claims/TPA administrator"
+    },
+    "claims_filing_deadline": {
+      "type": "string",
+      "description": "Deadline for filing claims after plan year"
+    },
+    "plan_document_data": {
+      "type": "object",
+      "description": "Full generated plan document content"
+    },
+    "total_employees": {
+      "type": "number",
+      "description": "Total number of employees (for simple cafeteria plan)"
+    }
+  },
+  "required": [
+    "plan_name",
+    "plan_type",
+    "employer_name"
+  ]
+}

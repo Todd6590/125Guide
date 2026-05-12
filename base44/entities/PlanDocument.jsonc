@@ -27,6 +27,11 @@
       "default": "draft",
       "description": "Status of the plan document"
     },
+    "is_sample": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this is a sample/demo plan document"
+    },
     "employer_name": {
       "type": "string",
       "description": "Legal name of the employer/company"

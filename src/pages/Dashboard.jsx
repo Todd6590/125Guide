@@ -1,15 +1,17 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FilePlus, Search, FileText, Loader2 } from "lucide-react";
 import PlanDashboardCard from "@/components/plans/PlanDashboardCard";
 import NondiscriminationTester from "@/components/compliance/NondiscriminationTester";
+import { toast } from "sonner";
 
 export default function Dashboard() {
   const [search, setSearch] = useState("");
+  const queryClient = useQueryClient();
 
   const { data: plans, isLoading } = useQuery({
     queryKey: ["plans"],
@@ -17,11 +19,20 @@ export default function Dashboard() {
     initialData: [],
   });
 
+  const handleDelete = async (id) => {
+    await base44.entities.PlanDocument.delete(id);
+    queryClient.invalidateQueries({ queryKey: ["plans"] });
+    toast.success("Plan deleted");
+  };
+
   const filtered = plans.filter(
     (p) =>
       (p.plan_name || "").toLowerCase().includes(search.toLowerCase()) ||
       (p.employer_name || "").toLowerCase().includes(search.toLowerCase())
   );
+
+  const yourPlans = filtered.filter((p) => !p.is_sample);
+  const samplePlans = filtered.filter((p) => p.is_sample);
 
   return (
     <div className="space-y-8">
@@ -67,7 +78,7 @@ export default function Dashboard() {
               <h2 className="font-serif text-xl font-semibold text-foreground">Your Plans</h2>
               <div className="flex-1 border-t border-border" />
             </div>
-            {filtered.length === 0 ? (
+            {yourPlans.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 text-center">
                 <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center mb-4">
                   <FileText className="w-8 h-8 text-muted-foreground" />
@@ -91,12 +102,31 @@ export default function Dashboard() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filtered.map((plan) => (
-                  <PlanDashboardCard key={plan.id} plan={plan} />
+                {yourPlans.map((plan) => (
+                  <PlanDashboardCard key={plan.id} plan={plan} onDelete={handleDelete} />
                 ))}
               </div>
             )}
           </div>
+
+          {/* Sample Plans */}
+          {samplePlans.length > 0 && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <h2 className="font-serif text-xl font-semibold text-muted-foreground">Sample Plans</h2>
+                <div className="flex-1 border-t border-dashed border-border" />
+                <span className="text-xs text-muted-foreground whitespace-nowrap">For reference only — not your plans</span>
+              </div>
+              <div className="p-3 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-800">
+                These are pre-loaded sample plan documents to help you explore the tool. They are not associated with any real client.
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {samplePlans.map((plan) => (
+                  <PlanDashboardCard key={plan.id} plan={plan} onDelete={handleDelete} />
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Compliance Tools */}
           <div className="space-y-4">

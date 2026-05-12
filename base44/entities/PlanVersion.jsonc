@@ -1,0 +1,37 @@
+{
+  "name": "PlanVersion",
+  "type": "object",
+  "properties": {
+    "plan_id": {
+      "type": "string",
+      "description": "ID of the parent PlanDocument"
+    },
+    "version_number": {
+      "type": "number",
+      "description": "Incremental version number"
+    },
+    "label": {
+      "type": "string",
+      "description": "Human-readable label for this version"
+    },
+    "changed_fields": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of top-level fields that changed in this version"
+    },
+    "snapshot": {
+      "type": "object",
+      "description": "Full copy of the PlanDocument data at the time of this version"
+    },
+    "saved_by": {
+      "type": "string",
+      "description": "Email of the user who saved this version"
+    }
+  },
+  "required": [
+    "plan_id",
+    "snapshot"
+  ]
+}

@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PlanWizard from "@/components/plans/PlanWizard";
+import { getChangedFields } from "@/components/plans/VersionHistory";
 
 export default function EditPlan() {
   const [saving, setSaving] = useState(false);
@@ -23,8 +24,23 @@ export default function EditPlan() {
 
   const handleSave = async (data) => {
     setSaving(true);
+
+    // Snapshot current state before overwriting
+    const existingVersions = await base44.entities.PlanVersion.filter({ plan_id: planId }, "-version_number", 1);
+    const nextVersion = (existingVersions[0]?.version_number || 0) + 1;
+    const changedFields = getChangedFields(plan, data);
+    await base44.entities.PlanVersion.create({
+      plan_id: planId,
+      version_number: nextVersion,
+      label: nextVersion === 1 ? "Initial version" : `Edit on ${new Date().toLocaleDateString()}`,
+      changed_fields: changedFields,
+      snapshot: { ...plan },
+      saved_by: plan.created_by,
+    });
+
     await base44.entities.PlanDocument.update(planId, { ...data, status: "complete" });
     queryClient.invalidateQueries({ queryKey: ["plans"] });
+    queryClient.invalidateQueries({ queryKey: ["plan-versions", planId] });
     toast.success("Plan document updated!");
     navigate(`/plan/${planId}`);
     setSaving(false);

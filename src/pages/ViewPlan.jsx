@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Pencil, Trash2, FileText, Loader2, Download } from "lucide-react";
+import { ArrowLeft, Pencil, Trash2, FileText, Loader2, Download, History } from "lucide-react";
 import { generatePlanPDF } from "@/lib/generatePlanPDF";
 import { toast } from "sonner";
 import ReviewStep from "@/components/plans/steps/ReviewStep";
@@ -20,6 +20,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import VersionHistory from "@/components/plans/VersionHistory";
 
 export default function ViewPlan() {
   const params = new URLSearchParams(window.location.search);
@@ -107,6 +108,9 @@ export default function ViewPlan() {
           <TabsTrigger value="document" className="gap-2">
             <FileText className="w-4 h-4" /> Plan Document
           </TabsTrigger>
+          <TabsTrigger value="history" className="gap-2">
+            <History className="w-4 h-4" /> Version History
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="summary" className="mt-6">
           <div className="bg-card rounded-xl border p-6 md:p-8 shadow-sm">
@@ -120,6 +124,15 @@ export default function ViewPlan() {
             </Button>
           </div>
           <PlanDocumentPreview plan={plan} />
+        </TabsContent>
+        <TabsContent value="history" className="mt-6">
+          <div className="bg-card rounded-xl border p-6 md:p-8 shadow-sm">
+            <div className="mb-5">
+              <h3 className="font-serif text-xl font-semibold">Version History</h3>
+              <p className="text-sm text-muted-foreground mt-1">Each save creates a snapshot. Click any version to see what changed, or revert to it.</p>
+            </div>
+            <VersionHistory plan={plan} />
+          </div>
         </TabsContent>
       </Tabs>
     </div>

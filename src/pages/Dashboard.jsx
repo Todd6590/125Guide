@@ -31,8 +31,10 @@ export default function Dashboard() {
       (p.employer_name || "").toLowerCase().includes(search.toLowerCase())
   );
 
-  const yourPlans = filtered.filter((p) => !p.is_sample);
-  const samplePlans = filtered.filter((p) => p.is_sample);
+  const SAMPLE_IDS = ["6a034bdd348868f845979461", "6a034bdd348868f845979462", "6a034bdd348868f845979460"];
+  const isSample = (p) => p.is_sample === true || SAMPLE_IDS.includes(p.id);
+  const yourPlans = filtered.filter((p) => !isSample(p));
+  const samplePlans = filtered.filter((p) => isSample(p));
 
   return (
     <div className="space-y-8">
@@ -79,21 +81,14 @@ export default function Dashboard() {
               <div className="flex-1 border-t border-border" />
             </div>
             {yourPlans.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 text-center">
-                <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center mb-4">
-                  <FileText className="w-8 h-8 text-muted-foreground" />
-                </div>
-                <h3 className="font-serif text-xl font-semibold text-foreground mb-1">
-                  {search ? "No plans found" : "No plan documents yet"}
-                </h3>
-                <p className="text-sm text-muted-foreground mb-6 max-w-sm">
-                  {search
-                    ? "Try a different search term."
-                    : "Get started by creating your first Section 125 plan document."}
+              <div className="flex flex-col items-center justify-center py-10 text-center border-2 border-dashed border-border rounded-xl bg-muted/20">
+                <FileText className="w-8 h-8 text-muted-foreground mb-3" />
+                <p className="text-sm font-medium text-muted-foreground">
+                  {search ? "No matching plans found." : "Your plans will appear here."}
                 </p>
                 {!search && (
-                  <Link to="/create">
-                    <Button className="gap-2">
+                  <Link to="/create" className="mt-4">
+                    <Button size="sm" className="gap-2">
                       <FilePlus className="w-4 h-4" />
                       Create Your First Plan
                     </Button>

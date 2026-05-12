@@ -4,6 +4,21 @@ import { Label } from "@/components/ui/label";
 export default function EmployerInfoStep({ data, onChange }) {
   const update = (field, value) => onChange({ ...data, [field]: value });
 
+  const handleEIN = (e) => {
+    const digits = e.target.value.replace(/\D/g, "").slice(0, 9);
+    const formatted = digits.length > 2 ? `${digits.slice(0, 2)}-${digits.slice(2)}` : digits;
+    update("employer_ein", formatted);
+  };
+
+  const handlePhone = (e) => {
+    const digits = e.target.value.replace(/\D/g, "").slice(0, 10);
+    let formatted = digits;
+    if (digits.length > 6) formatted = `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+    else if (digits.length > 3) formatted = `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+    else if (digits.length > 0) formatted = `(${digits}`;
+    update("employer_phone", formatted);
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -28,7 +43,7 @@ export default function EmployerInfoStep({ data, onChange }) {
             id="employer_ein"
             placeholder="XX-XXXXXXX"
             value={data.employer_ein || ""}
-            onChange={(e) => update("employer_ein", e.target.value)}
+            onChange={handleEIN}
           />
         </div>
 
@@ -38,7 +53,7 @@ export default function EmployerInfoStep({ data, onChange }) {
             id="employer_phone"
             placeholder="(555) 123-4567"
             value={data.employer_phone || ""}
-            onChange={(e) => update("employer_phone", e.target.value)}
+            onChange={handlePhone}
           />
         </div>
 

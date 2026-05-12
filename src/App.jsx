@@ -12,6 +12,8 @@ import CreatePlan from '@/pages/CreatePlan';
 import ViewPlan from '@/pages/ViewPlan';
 import EditPlan from '@/pages/EditPlan';
 import Clients from '@/pages/Clients';
+import ComplianceReview from '@/pages/ComplianceReview';
+import Profile from '@/pages/Profile';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -41,6 +43,8 @@ const AuthenticatedApp = () => {
         <Route path="/plan/:id" element={<ViewPlan />} />
         <Route path="/edit/:id" element={<EditPlan />} />
         <Route path="/clients" element={<Clients />} />
+        <Route path="/compliance" element={<ComplianceReview />} />
+        <Route path="/profile" element={<Profile />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

@@ -1,0 +1,67 @@
+{
+  "name": "ComplianceAlert",
+  "type": "object",
+  "properties": {
+    "plan_id": {
+      "type": "string",
+      "description": "ID of the PlanDocument this alert belongs to"
+    },
+    "plan_name": {
+      "type": "string",
+      "description": "Cached plan name for display"
+    },
+    "employer_name": {
+      "type": "string",
+      "description": "Cached employer name for display"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "critical",
+        "warning",
+        "info"
+      ],
+      "description": "Severity level of the alert"
+    },
+    "category": {
+      "type": "string",
+      "description": "Category of the compliance issue (e.g. 'IRS Limits', 'Plan Year', 'Eligibility')"
+    },
+    "issue": {
+      "type": "string",
+      "description": "Short description of the compliance issue"
+    },
+    "detail": {
+      "type": "string",
+      "description": "Detailed explanation of the issue"
+    },
+    "recommendation": {
+      "type": "string",
+      "description": "Recommended corrective action"
+    },
+    "amendment_text": {
+      "type": "string",
+      "description": "AI-generated amendment or correction language"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "resolved",
+        "dismissed"
+      ],
+      "default": "open",
+      "description": "Current status of this alert"
+    },
+    "check_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date this compliance check was run"
+    }
+  },
+  "required": [
+    "plan_id",
+    "issue",
+    "severity"
+  ]
+}

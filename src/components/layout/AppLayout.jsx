@@ -1,12 +1,83 @@
-import { Outlet, Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, FilePlus, FileText, Users } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
+import { LayoutDashboard, FilePlus, Users, ShieldCheck, User, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { base44 } from "@/api/base44Client";
+import UserAvatar from "@/components/user/UserAvatar";
 
 const navItems = [
   { path: "/", label: "Dashboard", icon: LayoutDashboard },
   { path: "/clients", label: "Clients", icon: Users },
+  { path: "/compliance", label: "Compliance", icon: ShieldCheck },
   { path: "/create", label: "New Plan", icon: FilePlus },
 ];
+
+function UserMenu() {
+  const [user, setUser] = useState(null);
+  const [open, setOpen] = useState(false);
+  const ref = useRef();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    base44.auth.me().then(setUser).catch(() => {});
+  }, []);
+
+  // Close on outside click
+  useEffect(() => {
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const handleLogout = () => {
+    base44.auth.logout("/");
+  };
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-white/10 transition-colors"
+        aria-label="User menu"
+      >
+        <UserAvatar user={user} size={32} />
+        {user?.full_name && (
+          <span className="hidden sm:inline text-sm font-medium text-primary-foreground/90 max-w-[120px] truncate">
+            {user.full_name}
+          </span>
+        )}
+      </button>
+
+      {open && (
+        <div className="absolute right-0 top-full mt-2 w-56 rounded-xl border border-border bg-card shadow-xl z-50 overflow-hidden">
+          {/* Profile header */}
+          <div className="flex items-center gap-3 p-3 border-b bg-muted/30">
+            <UserAvatar user={user} size={40} />
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-foreground truncate">{user?.full_name || "User"}</p>
+              <p className="text-xs text-muted-foreground truncate">{user?.email || ""}</p>
+            </div>
+          </div>
+          {/* Menu items */}
+          <div className="p-1">
+            <button
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-foreground hover:bg-muted transition-colors"
+              onClick={() => { setOpen(false); navigate("/profile"); }}
+            >
+              <User className="w-4 h-4 text-muted-foreground" /> My Profile
+            </button>
+            <button
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-destructive hover:bg-destructive/10 transition-colors"
+              onClick={handleLogout}
+            >
+              <LogOut className="w-4 h-4" /> Log Out
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function AppLayout() {
   const location = useLocation();
@@ -27,27 +98,32 @@ export default function AppLayout() {
               </div>
             </Link>
 
-            <nav className="flex items-center gap-1">
-              {navItems.map((item) => {
-                const Icon = item.icon;
-                const isActive = location.pathname === item.path;
-                return (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className={cn(
-                      "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all",
-                      isActive
-                        ? "bg-white/15 text-primary-foreground"
-                        : "text-primary-foreground/70 hover:text-primary-foreground hover:bg-white/10"
-                    )}
-                  >
-                    <Icon className="w-4 h-4" />
-                    <span className="hidden sm:inline">{item.label}</span>
-                  </Link>
-                );
-              })}
-            </nav>
+            <div className="flex items-center gap-1">
+              <nav className="flex items-center gap-1">
+                {navItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = location.pathname === item.path;
+                  return (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      className={cn(
+                        "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all",
+                        isActive
+                          ? "bg-white/15 text-primary-foreground"
+                          : "text-primary-foreground/70 hover:text-primary-foreground hover:bg-white/10"
+                      )}
+                    >
+                      <Icon className="w-4 h-4" />
+                      <span className="hidden md:inline">{item.label}</span>
+                    </Link>
+                  );
+                })}
+              </nav>
+              <div className="ml-2 pl-2 border-l border-white/20">
+                <UserMenu />
+              </div>
+            </div>
           </div>
         </div>
       </header>

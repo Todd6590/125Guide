@@ -1,0 +1,22 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "user"
+      ],
+      "default": "user"
+    },
+    "phone": {
+      "type": "string",
+      "description": "User phone number"
+    },
+    "avatar_url": {
+      "type": "string",
+      "description": "URL to the user's uploaded profile photo"
+    }
+  }
+}

@@ -17,8 +17,8 @@ export default function AppLayout() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link to="/" className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center">
-                <FileText className="w-4 h-4 text-accent-foreground" />
+              <div className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center">
+                <img src="https://media.base44.com/images/public/6a034aa2348868f8459793ee/08d459ad8_generated_image.png" alt="Broker Tools Logo" className="w-8 h-8 object-contain" />
               </div>
               <div>
                 <h1 className="text-lg font-serif font-semibold tracking-tight">Section 125</h1>

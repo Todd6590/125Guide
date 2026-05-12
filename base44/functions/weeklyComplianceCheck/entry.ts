@@ -1,27 +1,23 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
-const IRS_RULES_2025 = `
-IRS Section 125 Cafeteria Plan Compliance Rules (2025):
-- Health FSA maximum annual election: $3,300 (up from $3,200 in 2024)
-- Health FSA carryover maximum: $660 (up from $640 in 2024)
+const FALLBACK_RULES = `
+IRS Section 125 Cafeteria Plan Compliance Rules (2025 - fallback):
+- Health FSA maximum annual election: $3,300
+- Health FSA carryover maximum: $660
 - DCAP maximum annual election: $5,000 ($2,500 if married filing separately)
 - HSA contribution limits: $4,300 self-only / $8,550 family
 - Plan year must be 12 consecutive months (except short first year or plan termination)
-- Plan must have a written plan document
-- Plan must have a Summary Plan Description (SPD)
+- Plan must have a written plan document and Summary Plan Description (SPD)
 - Employer EIN is required for ERISA plans
 - Plan number must be a 3-digit number (001-999)
 - Plan administrator must be named with contact information
 - Eligibility class must be defined and non-discriminatory
-- Waiting period must be specified
-- Entry dates must be specified (immediate, first of month, first of quarter, etc.)
-- For grace periods: may not exceed 2 months and 15 days after plan year end
-- For carryover: cannot be combined with grace period in same plan
-- Claims filing deadline must be specified (typically 90 days after plan year end or service date)
+- Waiting period and entry dates must be specified
+- Grace periods may not exceed 2 months and 15 days; cannot be combined with carryover
+- Claims filing deadline must be specified (typically 90 days after plan year end)
 - Premium Only Plans (POP): must list specific insurance premiums being salary-reduced
-- Simple Cafeteria Plans: employer must have 100 or fewer employees and meet contribution requirements
-- Election change events must be documented (birth, marriage, divorce, loss of coverage, etc.)
-- Plan must specify if employer contributions are made and the amount/formula
+- Simple Cafeteria Plans: employer must have 100 or fewer employees
+- Election change events must be documented
 `;
 
 Deno.serve(async (req) => {
@@ -31,6 +27,31 @@ Deno.serve(async (req) => {
 
     if (!user) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Load the active IRS ruleset from the database (or fall back to hardcoded)
+    let irsRulesText = FALLBACK_RULES;
+    let activeRuleYear = "2025 (fallback)";
+    try {
+      const allRules = await base44.asServiceRole.entities.IrsRules.list();
+      const activeRule = allRules.find(r => r.is_active);
+      if (activeRule && activeRule.full_rules_text) {
+        irsRulesText = activeRule.full_rules_text;
+        activeRuleYear = String(activeRule.fiscal_year);
+        // Prepend the structured limits for extra precision
+        irsRulesText = `IRS Section 125 Key Limits (Tax Year ${activeRule.fiscal_year}):
+- Health FSA maximum annual election: $${activeRule.fsa_max_election}
+- Health FSA carryover maximum: $${activeRule.fsa_carryover_max}
+- DCAP maximum (single/MFJ): $${activeRule.dcap_max_election}; (MFS): $${activeRule.dcap_max_mfs || 2500}
+- HSA self-only: $${activeRule.hsa_self_only}; family: $${activeRule.hsa_family}
+- Simple Cafeteria Plan max employees: ${activeRule.simple_cafeteria_max_employees || 100}
+- Grace period max: ${activeRule.grace_period_max_days || 75} days
+
+FULL RULES:
+${activeRule.full_rules_text}`;
+      }
+    } catch (_e) {
+      // Use fallback if DB fetch fails
     }
 
     // Get all complete plans
@@ -78,8 +99,8 @@ Deno.serve(async (req) => {
 
       const prompt = `You are an IRS Section 125 compliance expert. Review this cafeteria plan document data against the current IRS rules and identify any compliance issues.
 
-CURRENT IRS RULES:
-${IRS_RULES_2025}
+CURRENT IRS RULES (Tax Year ${activeRuleYear}):
+${irsRulesText}
 
 TODAY'S DATE: ${today}
 

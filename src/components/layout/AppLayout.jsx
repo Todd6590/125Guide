@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
-import { LayoutDashboard, FilePlus, Users, ShieldCheck, User, LogOut } from "lucide-react";
+import { LayoutDashboard, FilePlus, Users, ShieldCheck, User, LogOut, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { base44 } from "@/api/base44Client";
 import UserAvatar from "@/components/user/UserAvatar";
@@ -10,6 +10,7 @@ const navItems = [
   { path: "/clients", label: "Clients", icon: Users },
   { path: "/compliance", label: "Compliance", icon: ShieldCheck },
   { path: "/create", label: "New Plan", icon: FilePlus },
+  { path: "/admin", label: "IRS Rules", icon: Settings },
 ];
 
 function UserMenu() {

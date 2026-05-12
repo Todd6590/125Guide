@@ -1,0 +1,70 @@
+{
+  "name": "IrsRules",
+  "type": "object",
+  "properties": {
+    "fiscal_year": {
+      "type": "number",
+      "description": "The tax/fiscal year these rules apply to (e.g. 2025)"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this is the currently active ruleset used for compliance checks"
+    },
+    "source_summary": {
+      "type": "string",
+      "description": "AI-generated summary of sources consulted and key changes found"
+    },
+    "fsa_max_election": {
+      "type": "number",
+      "description": "Health FSA maximum annual election"
+    },
+    "fsa_carryover_max": {
+      "type": "number",
+      "description": "Health FSA maximum carryover amount"
+    },
+    "dcap_max_election": {
+      "type": "number",
+      "description": "DCAP maximum annual election (married filing jointly or single)"
+    },
+    "dcap_max_mfs": {
+      "type": "number",
+      "description": "DCAP maximum for married filing separately"
+    },
+    "hsa_self_only": {
+      "type": "number",
+      "description": "HSA contribution limit for self-only coverage"
+    },
+    "hsa_family": {
+      "type": "number",
+      "description": "HSA contribution limit for family coverage"
+    },
+    "simple_cafeteria_max_employees": {
+      "type": "number",
+      "description": "Max employee count to qualify for Simple Cafeteria Plan"
+    },
+    "grace_period_max_days": {
+      "type": "number",
+      "description": "Maximum grace period in days after plan year end (typically 75)"
+    },
+    "full_rules_text": {
+      "type": "string",
+      "description": "Full AI-compiled rules text used in compliance prompts"
+    },
+    "last_fetched": {
+      "type": "string",
+      "format": "date",
+      "description": "Date rules were last refreshed from the web"
+    },
+    "irs_notice_references": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "IRS notices, revenue procedures, or publications referenced"
+    }
+  },
+  "required": [
+    "fiscal_year"
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "name": "Client",
+  "type": "object",
+  "properties": {
+    "company_name": {
+      "type": "string",
+      "description": "Legal name of the client company"
+    },
+    "contact_name": {
+      "type": "string",
+      "description": "Primary contact full name"
+    },
+    "contact_email": {
+      "type": "string",
+      "description": "Primary contact email address"
+    },
+    "contact_phone": {
+      "type": "string",
+      "description": "Primary contact phone number"
+    },
+    "ein": {
+      "type": "string",
+      "description": "Employer Identification Number"
+    },
+    "address": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string"
+    },
+    "zip": {
+      "type": "string"
+    },
+    "industry": {
+      "type": "string",
+      "description": "Industry or business type"
+    },
+    "employee_count": {
+      "type": "number",
+      "description": "Approximate number of employees"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "prospect",
+        "inactive"
+      ],
+      "default": "prospect",
+      "description": "Client relationship status"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes about this client"
+    },
+    "plan_renewal_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Next plan renewal or review date"
+    }
+  },
+  "required": [
+    "company_name"
+  ]
+}

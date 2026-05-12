@@ -1,9 +1,10 @@
 import { Outlet, Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, FilePlus, FileText, Settings } from "lucide-react";
+import { LayoutDashboard, FilePlus, FileText, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   { path: "/", label: "Dashboard", icon: LayoutDashboard },
+  { path: "/clients", label: "Clients", icon: Users },
   { path: "/create", label: "New Plan", icon: FilePlus },
 ];
 

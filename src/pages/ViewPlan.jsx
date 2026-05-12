@@ -3,7 +3,8 @@ import { useNavigate, Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Pencil, Trash2, FileText, Loader2 } from "lucide-react";
+import { ArrowLeft, Pencil, Trash2, FileText, Loader2, Download } from "lucide-react";
+import { generatePlanPDF } from "@/lib/generatePlanPDF";
 import { toast } from "sonner";
 import ReviewStep from "@/components/plans/steps/ReviewStep";
 import PlanDocumentPreview from "@/components/plans/PlanDocumentPreview";
@@ -113,6 +114,11 @@ export default function ViewPlan() {
           </div>
         </TabsContent>
         <TabsContent value="document" className="mt-6">
+          <div className="flex justify-end mb-4">
+            <Button onClick={() => generatePlanPDF(plan)} className="gap-2">
+              <Download className="w-4 h-4" /> Download PDF
+            </Button>
+          </div>
           <PlanDocumentPreview plan={plan} />
         </TabsContent>
       </Tabs>

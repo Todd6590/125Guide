@@ -169,14 +169,6 @@ export default function NondiscriminationTester() {
           {/* Census Table */}
           {useSample !== null && (
             <>
-              {useSample && (
-                <div className="flex items-center gap-2">
-                  <Badge variant="secondary" className="text-xs">Sample Data</Badge>
-                  <span className="text-xs text-muted-foreground">Edit rows below or</span>
-                  <button onClick={startBlank} className="text-xs text-primary underline">start with your own data</button>
-                </div>
-              )}
-
               <div className="overflow-x-auto">
                 <table className="w-full text-xs">
                   <thead>
@@ -190,6 +182,17 @@ export default function NondiscriminationTester() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
+                    {useSample && (
+                      <tr>
+                        <td colSpan={6} className="pt-3 pb-1 px-0">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Sample Employees</span>
+                            <div className="flex-1 border-t border-dashed border-border" />
+                            <button onClick={startBlank} className="text-xs text-primary underline whitespace-nowrap">Use my own data</button>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
                     {employees.map((emp) => (
                       <tr key={emp.id} className="hover:bg-muted/30">
                         <td className="py-1.5 pr-3">
@@ -211,7 +214,7 @@ export default function NondiscriminationTester() {
                           </td>
                         ))}
                         <td className="py-1.5">
-                          <button onClick={() => removeRow(emp.id)} className="text-muted-foreground hover:text-destructive">
+                          <button onClick={() => removeRow(emp.id)} className="text-muted-foreground hover:text-destructive transition-colors">
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         </td>

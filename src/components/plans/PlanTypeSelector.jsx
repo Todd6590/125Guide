@@ -1,6 +1,6 @@
 import PlanTypeCard from "./PlanTypeCard";
 
-const PLAN_TYPES = ["pop", "health_fsa", "dcap", "full_flex", "simple_cafeteria"];
+const PLAN_TYPES = ["pop", "health_fsa", "limited_fsa", "dcap", "full_flex", "simple_cafeteria"];
 
 export default function PlanTypeSelector({ selected, onSelect }) {
   return (

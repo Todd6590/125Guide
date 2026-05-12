@@ -4,28 +4,33 @@ import { Check } from "lucide-react";
 const PLAN_TYPE_INFO = {
   pop: {
     title: "Premium Only Plan (POP)",
-    description: "Allows employees to pay group health insurance premiums with pre-tax dollars. The simplest Section 125 plan.",
-    features: ["Pre-tax premium payments", "Medical, dental, vision", "Simple administration"],
+    description: "The most common Section 125 plan. Employees pay their share of group health insurance premiums (medical, dental, vision) with pre-tax dollars.",
+    features: ["Pre-tax premium deductions", "Medical, dental, vision, life", "HSA contributions eligible", "Simplest to administer"],
   },
   health_fsa: {
     title: "Health FSA",
-    description: "Employees set aside pre-tax dollars for qualified medical expenses not covered by insurance.",
-    features: ["Pre-tax medical expenses", "Grace period or carryover options", "Uniform coverage rule applies"],
+    description: "Employees set aside pre-tax funds for out-of-pocket medical, dental, and vision costs not covered by insurance. Subject to use-it-or-lose-it rules.",
+    features: ["Pre-tax medical expenses", "Grace period or carryover options", "Uniform coverage rule applies", "Up to $3,300/year (2025)"],
+  },
+  limited_fsa: {
+    title: "Limited Purpose FSA",
+    description: "Designed for employees enrolled in an HSA-compatible High Deductible Health Plan (HDHP). Covers dental and vision expenses only.",
+    features: ["Dental & vision only", "HSA-compatible", "Use-it-or-lose-it basis", "Preserves HSA eligibility"],
   },
   dcap: {
     title: "Dependent Care (DCAP)",
-    description: "Pre-tax contributions for dependent care expenses such as daycare, preschool, and elder care.",
-    features: ["Up to $5,000/year tax-free", "Childcare & elder care", "No uniform coverage rule"],
+    description: "Pre-tax contributions for child or elder care expenses such as daycare, preschool, and after-school programs, up to $5,000 annually.",
+    features: ["Up to $5,000/year tax-free", "Childcare & elder care", "No uniform coverage rule", "$2,500 if married filing separately"],
   },
   full_flex: {
     title: "Full Flex Cafeteria Plan",
-    description: "Comprehensive plan combining POP, Health FSA, and DCAP into one unified Section 125 plan.",
-    features: ["Combines all plan types", "Maximum flexibility", "Employer contributions optional"],
+    description: "Comprehensive plan where employers provide funds employees use to select from a menu of benefits, with pre-tax payroll deductions for costs exceeding the allowance.",
+    features: ["Employer benefit allowance", "Employee selects from menu", "Combines POP, FSA & DCAP", "Maximum tax savings"],
   },
   simple_cafeteria: {
     title: "Simple Cafeteria Plan",
-    description: "For employers with 100 or fewer employees. Exempt from non-discrimination testing requirements.",
-    features: ["≤100 employees", "No nondiscrimination testing", "Simplified compliance"],
+    description: "Designed for small businesses with 100 or fewer employees. Avoids complex non-discrimination testing by meeting safe-harbor contribution requirements.",
+    features: ["≤100 employees", "No nondiscrimination testing", "Safe-harbor contributions", "Simplified compliance"],
   },
 };
 

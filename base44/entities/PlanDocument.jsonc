@@ -11,6 +11,7 @@
       "enum": [
         "pop",
         "health_fsa",
+        "limited_fsa",
         "dcap",
         "full_flex",
         "simple_cafeteria"
@@ -124,6 +125,30 @@
     "fsa_carryover_amount": {
       "type": "number",
       "description": "Maximum carryover amount for FSA"
+    },
+    "limited_fsa_max_election": {
+      "type": "number",
+      "description": "Maximum annual Limited Purpose FSA election amount"
+    },
+    "limited_fsa_min_election": {
+      "type": "number",
+      "description": "Minimum annual Limited Purpose FSA election amount"
+    },
+    "limited_fsa_grace_period": {
+      "type": "boolean",
+      "description": "Whether a grace period applies to Limited Purpose FSA"
+    },
+    "limited_fsa_carryover": {
+      "type": "boolean",
+      "description": "Whether carryover applies to Limited Purpose FSA"
+    },
+    "limited_fsa_carryover_amount": {
+      "type": "number",
+      "description": "Maximum carryover amount for Limited Purpose FSA"
+    },
+    "hsa_contributions": {
+      "type": "boolean",
+      "description": "Whether HSA contributions are offered"
     },
     "dcap_max_election": {
       "type": "number",

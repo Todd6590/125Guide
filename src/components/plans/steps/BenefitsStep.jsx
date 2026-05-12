@@ -8,6 +8,7 @@ const POP_BENEFITS = [
   "Group dental insurance",
   "Group vision insurance",
   "Group term life insurance (up to $50,000)",
+  "Health Savings Account (HSA) contributions",
   "Disability insurance",
   "Accident insurance",
   "Cancer/Critical illness insurance",
@@ -117,6 +118,81 @@ const DCAP_SECTION = ({ data, onChange }) => {
   );
 };
 
+const LIMITED_FSA_SECTION = ({ data, onChange }) => {
+  const update = (field, value) => onChange({ ...data, [field]: value });
+
+  return (
+    <div className="space-y-4 p-5 rounded-xl bg-muted/40 border">
+      <div>
+        <h4 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground">Limited Purpose FSA Options</h4>
+        <p className="text-xs text-muted-foreground mt-1">For HSA-compatible HDHP participants — covers dental and vision expenses only.</p>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label>Maximum Annual Election</Label>
+          <Input
+            type="number"
+            placeholder="3,300"
+            value={data.limited_fsa_max_election || ""}
+            onChange={(e) => update("limited_fsa_max_election", e.target.value ? Number(e.target.value) : "")}
+          />
+          <p className="text-xs text-muted-foreground">2025 IRS limit: $3,300</p>
+        </div>
+        <div className="space-y-2">
+          <Label>Minimum Annual Election</Label>
+          <Input
+            type="number"
+            placeholder="100"
+            value={data.limited_fsa_min_election || ""}
+            onChange={(e) => update("limited_fsa_min_election", e.target.value ? Number(e.target.value) : "")}
+          />
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between p-3 rounded-lg bg-card border">
+        <div>
+          <p className="text-sm font-medium">Grace Period (2.5 months)</p>
+          <p className="text-xs text-muted-foreground">Allow additional time to incur expenses</p>
+        </div>
+        <Switch
+          checked={data.limited_fsa_grace_period || false}
+          onCheckedChange={(v) => {
+            update("limited_fsa_grace_period", v);
+            if (v) update("limited_fsa_carryover", false);
+          }}
+        />
+      </div>
+
+      <div className="flex items-center justify-between p-3 rounded-lg bg-card border">
+        <div>
+          <p className="text-sm font-medium">Carryover</p>
+          <p className="text-xs text-muted-foreground">Carry unused funds to next plan year</p>
+        </div>
+        <Switch
+          checked={data.limited_fsa_carryover || false}
+          onCheckedChange={(v) => {
+            update("limited_fsa_carryover", v);
+            if (v) update("limited_fsa_grace_period", false);
+          }}
+        />
+      </div>
+
+      {data.limited_fsa_carryover && (
+        <div className="space-y-2">
+          <Label>Maximum Carryover Amount</Label>
+          <Input
+            type="number"
+            placeholder="660"
+            value={data.limited_fsa_carryover_amount || ""}
+            onChange={(e) => update("limited_fsa_carryover_amount", e.target.value ? Number(e.target.value) : "")}
+          />
+          <p className="text-xs text-muted-foreground">2025 IRS limit: $660</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
 export default function BenefitsStep({ data, onChange }) {
   const update = (field, value) => onChange({ ...data, [field]: value });
   const planType = data.plan_type;
@@ -131,6 +207,7 @@ export default function BenefitsStep({ data, onChange }) {
 
   const showPOP = ["pop", "full_flex", "simple_cafeteria"].includes(planType);
   const showFSA = ["health_fsa", "full_flex", "simple_cafeteria"].includes(planType);
+  const showLimitedFSA = ["limited_fsa"].includes(planType);
   const showDCAP = ["dcap", "full_flex", "simple_cafeteria"].includes(planType);
 
   return (
@@ -159,6 +236,7 @@ export default function BenefitsStep({ data, onChange }) {
       )}
 
       {showFSA && <FSA_SECTION data={data} onChange={onChange} />}
+      {showLimitedFSA && <LIMITED_FSA_SECTION data={data} onChange={onChange} />}
       {showDCAP && <DCAP_SECTION data={data} onChange={onChange} />}
 
       <div className="space-y-4 p-5 rounded-xl bg-muted/40 border">

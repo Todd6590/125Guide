@@ -34,6 +34,7 @@ export default function PlanDocumentPreview({ plan }) {
   const typeInfo = PLAN_TYPE_INFO[p.plan_type] || {};
   const showPOP = ["pop", "full_flex", "simple_cafeteria"].includes(p.plan_type);
   const showFSA = ["health_fsa", "full_flex", "simple_cafeteria"].includes(p.plan_type);
+  const showLimitedFSA = p.plan_type === "limited_fsa";
   const showDCAP = ["dcap", "full_flex", "simple_cafeteria"].includes(p.plan_type);
 
   const addr = [p.employer_address, p.employer_city, p.employer_state, p.employer_zip]
@@ -82,6 +83,9 @@ export default function PlanDocumentPreview({ plan }) {
           {showFSA && (
             <p><strong>2.6 "Health Flexible Spending Account" or "Health FSA"</strong> means an account established under this Plan from which eligible medical care expenses (as defined under Section 213(d) of the Code) may be reimbursed.</p>
           )}
+          {showLimitedFSA && (
+            <p><strong>2.6 "Limited Purpose Flexible Spending Account" or "Limited Purpose FSA"</strong> means an account established under this Plan from which eligible dental and vision care expenses only (as defined under Section 213(d) of the Code) may be reimbursed. This account is designed for Participants who are also contributing to a Health Savings Account (HSA) and are enrolled in a High Deductible Health Plan (HDHP).</p>
+          )}
           {showDCAP && (
             <p><strong>2.{showFSA ? "7" : "6"} "Dependent Care Assistance Account" or "DCAP"</strong> means an account established under this Plan from which eligible dependent care expenses (as defined under Section 129 of the Code) may be reimbursed.</p>
           )}
@@ -129,6 +133,23 @@ export default function PlanDocumentPreview({ plan }) {
                 <p><strong>Use-It-or-Lose-It.</strong> Any unused Health FSA balance at the end of the Plan Year (and any applicable run-out period) shall be forfeited.</p>
               )}
               <p><strong>Uniform Coverage.</strong> The full annual election amount shall be available to the Participant at all times during the Plan Year, regardless of the amount of contributions made to date.</p>
+            </>
+          )}
+
+          {showLimitedFSA && (
+            <>
+              <p><strong>4.1 Limited Purpose Flexible Spending Account.</strong> A Participant who is enrolled in an HSA-compatible High Deductible Health Plan (HDHP) and contributing to a Health Savings Account (HSA) may elect to contribute to a Limited Purpose FSA on a pre-tax basis through salary reduction. Reimbursements are limited exclusively to eligible <strong>dental and vision</strong> expenses as defined under Section 213(d) of the Code. The maximum annual election is <strong>${blank(p.limited_fsa_max_election?.toLocaleString())}</strong> and the minimum annual election is <strong>${blank(p.limited_fsa_min_election?.toLocaleString())}</strong>.</p>
+              {p.limited_fsa_grace_period && (
+                <p><strong>Grace Period.</strong> A Participant shall have an additional period of two (2) months and fifteen (15) days following the end of the Plan Year to incur eligible dental and vision expenses reimbursable from any unused Limited Purpose FSA balance from the immediately preceding Plan Year.</p>
+              )}
+              {p.limited_fsa_carryover && (
+                <p><strong>Carryover.</strong> Up to <strong>${blank(p.limited_fsa_carryover_amount?.toLocaleString())}</strong> of unused Limited Purpose FSA amounts remaining at the end of a Plan Year may be carried over and used to pay eligible dental and vision expenses in the immediately following Plan Year.</p>
+              )}
+              {!p.limited_fsa_grace_period && !p.limited_fsa_carryover && (
+                <p><strong>Use-It-or-Lose-It.</strong> Any unused Limited Purpose FSA balance at the end of the Plan Year (and any applicable run-out period) shall be forfeited.</p>
+              )}
+              <p><strong>Uniform Coverage.</strong> The full annual election amount shall be available to the Participant at all times during the Plan Year, regardless of the amount of contributions made to date.</p>
+              <p><strong>HSA Compatibility.</strong> This Limited Purpose FSA is designed to be compatible with HSA eligibility under Section 223 of the Code. Participants are responsible for ensuring their elections comply with all applicable HSA rules.</p>
             </>
           )}
 

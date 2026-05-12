@@ -48,6 +48,7 @@ function formatDate(d) {
 export default function ReviewStep({ data }) {
   const planType = data.plan_type;
   const showFSA = ["health_fsa", "full_flex", "simple_cafeteria"].includes(planType);
+  const showLimitedFSA = planType === "limited_fsa";
   const showDCAP = ["dcap", "full_flex", "simple_cafeteria"].includes(planType);
 
   return (
@@ -93,7 +94,7 @@ export default function ReviewStep({ data }) {
         {data.total_employees && <Field label="Total Employees" value={data.total_employees} />}
       </Section>
 
-      {(data.benefits_offered?.length > 0 || showFSA || showDCAP) && (
+      {(data.benefits_offered?.length > 0 || showFSA || showLimitedFSA || showDCAP) && (
         <div className="space-y-3">
           <h4 className="font-serif text-base font-semibold text-foreground border-b pb-2">Benefits</h4>
           {data.benefits_offered?.length > 0 && (
@@ -112,6 +113,15 @@ export default function ReviewStep({ data }) {
               <Field label="FSA Min Election" value={data.fsa_min_election ? `$${data.fsa_min_election.toLocaleString()}` : null} />
               <Field label="Grace Period" value={data.fsa_grace_period ? "Yes (2.5 months)" : "No"} />
               <Field label="Carryover" value={data.fsa_carryover ? `Yes (up to $${data.fsa_carryover_amount?.toLocaleString() || "—"})` : "No"} />
+            </div>
+          )}
+          {showLimitedFSA && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+              <Field label="Limited FSA Max Election" value={data.limited_fsa_max_election ? `$${data.limited_fsa_max_election.toLocaleString()}` : null} />
+              <Field label="Limited FSA Min Election" value={data.limited_fsa_min_election ? `$${data.limited_fsa_min_election.toLocaleString()}` : null} />
+              <Field label="Grace Period" value={data.limited_fsa_grace_period ? "Yes (2.5 months)" : "No"} />
+              <Field label="Carryover" value={data.limited_fsa_carryover ? `Yes (up to $${data.limited_fsa_carryover_amount?.toLocaleString() || "—"})` : "No"} />
+              <Field label="Covers" value="Dental & vision only (HSA-compatible)" />
             </div>
           )}
           {showDCAP && (

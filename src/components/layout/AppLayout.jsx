@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
-import { LayoutDashboard, FilePlus, Users, ShieldCheck, User, LogOut, Settings, FileText, ChevronDown } from "lucide-react";
+import { LayoutDashboard, FilePlus, Users, ShieldCheck, User, LogOut, Settings, FileText, ChevronDown, FlaskConical } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { base44 } from "@/api/base44Client";
 import UserAvatar from "@/components/user/UserAvatar";
@@ -13,6 +13,7 @@ const plansItems = [
 
 const complianceItems = [
   { path: "/compliance", label: "Compliance", icon: ShieldCheck },
+  { path: "/ndt", label: "NDT Testing", icon: FlaskConical },
   { path: "/admin", label: "IRS Rules", icon: Settings },
 ];
 

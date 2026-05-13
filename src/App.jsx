@@ -16,6 +16,7 @@ import ComplianceReview from '@/pages/ComplianceReview';
 import Profile from '@/pages/Profile';
 import AdminDashboard from '@/pages/AdminDashboard';
 import PlansManagement from '@/pages/PlansManagement';
+import NondiscriminationTesting from '@/pages/NondiscriminationTesting';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -49,6 +50,7 @@ const AuthenticatedApp = () => {
         <Route path="/profile" element={<Profile />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/plans" element={<PlansManagement />} />
+        <Route path="/ndt" element={<NondiscriminationTesting />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

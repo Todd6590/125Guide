@@ -2,6 +2,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
+function formatPhone(value) {
+  const digits = value.replace(/\D/g, "").slice(0, 10);
+  if (digits.length < 4) return digits;
+  if (digits.length < 7) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+}
+
 export default function PlanDetailsStep({ data, onChange }) {
   const update = (field, value) => onChange({ ...data, [field]: value });
 
@@ -89,7 +96,7 @@ export default function PlanDetailsStep({ data, onChange }) {
             id="plan_administrator_phone"
             placeholder="(555) 123-4567"
             value={data.plan_administrator_phone || ""}
-            onChange={(e) => update("plan_administrator_phone", e.target.value)}
+            onChange={(e) => update("plan_administrator_phone", formatPhone(e.target.value))}
           />
         </div>
 

@@ -68,7 +68,7 @@ export default function PlanWizard({ initialData, onSave, onAutoSave, saving }) 
   return (
     <div>
       {/* Step indicators */}
-      <div className="flex items-center gap-1 mb-8 overflow-x-auto pb-2">
+      <div className="flex items-center gap-1 mb-4 overflow-x-auto pb-1">
         {STEPS.map((s, i) => (
           <button
             key={s.key}
@@ -99,12 +99,12 @@ export default function PlanWizard({ initialData, onSave, onAutoSave, saving }) 
       </div>
 
       {/* Step content */}
-      <div className="bg-card rounded-xl border p-6 md:p-8 shadow-sm">
+      <div className="bg-card rounded-xl border p-4 md:p-6 shadow-sm">
         {renderStep()}
       </div>
 
       {/* Navigation */}
-      <div className="flex items-center justify-between mt-6">
+      <div className="flex items-center justify-between mt-4">
         <Button
           variant="outline"
           onClick={() => setStep((s) => s - 1)}

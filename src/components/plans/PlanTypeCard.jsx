@@ -42,7 +42,7 @@ export default function PlanTypeCard({ type, selected, onSelect }) {
     <button
       onClick={() => onSelect(type)}
       className={cn(
-        "relative text-left p-6 rounded-xl border-2 transition-all duration-200 group",
+        "relative text-left p-3 sm:p-4 rounded-xl border-2 transition-all duration-200 group",
         selected
           ? "border-primary bg-primary/5 shadow-md"
           : "border-border bg-card hover:border-primary/30 hover:shadow-sm"
@@ -53,9 +53,9 @@ export default function PlanTypeCard({ type, selected, onSelect }) {
           <Check className="w-3.5 h-3.5 text-primary-foreground" />
         </div>
       )}
-      <h3 className="font-serif text-lg font-semibold text-foreground mb-2">{info.title}</h3>
-      <p className="text-sm text-muted-foreground leading-relaxed mb-4">{info.description}</p>
-      <div className="space-y-1.5">
+      <h3 className="font-serif text-base font-semibold text-foreground mb-1">{info.title}</h3>
+      <p className="text-xs text-muted-foreground leading-relaxed mb-2">{info.description}</p>
+      <div className="space-y-1">
         {info.features.map((f) => (
           <div key={f} className="flex items-center gap-2 text-xs text-muted-foreground">
             <div className="w-1 h-1 rounded-full bg-accent" />

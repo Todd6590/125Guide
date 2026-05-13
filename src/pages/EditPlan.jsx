@@ -22,10 +22,15 @@ export default function EditPlan() {
 
   const plan = plans.find((p) => p.id === planId);
 
+  // Auto-save changes without creating a version snapshot
+  const handleAutoSave = async (data) => {
+    await base44.entities.PlanDocument.update(planId, { ...data, status: "draft" });
+    queryClient.invalidateQueries({ queryKey: ["plans"] });
+  };
+
+  // Final save: create version snapshot and mark complete
   const handleSave = async (data) => {
     setSaving(true);
-
-    // Snapshot current state before overwriting
     const existingVersions = await base44.entities.PlanVersion.filter({ plan_id: planId }, "-version_number", 1);
     const nextVersion = (existingVersions[0]?.version_number || 0) + 1;
     const changedFields = getChangedFields(plan, data);
@@ -67,7 +72,7 @@ export default function EditPlan() {
 
   return (
     <div>
-      <PlanWizard initialData={plan} onSave={handleSave} saving={saving} />
+      <PlanWizard initialData={plan} onSave={handleSave} onAutoSave={handleAutoSave} saving={saving} />
     </div>
   );
 }

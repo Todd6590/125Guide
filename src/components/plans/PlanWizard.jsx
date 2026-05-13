@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, Save, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Save, Loader2, Cloud, CloudOff, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAutoSave } from "@/hooks/useAutoSave";
 
 import PlanTypeSelector from "./PlanTypeSelector";
 import EmployerInfoStep from "./steps/EmployerInfoStep";
@@ -19,9 +20,27 @@ const STEPS = [
   { key: "review", label: "Review" },
 ];
 
-export default function PlanWizard({ initialData, onSave, saving }) {
+function AutoSaveIndicator({ status }) {
+  if (status === "idle") return null;
+  return (
+    <div className={cn(
+      "flex items-center gap-1.5 text-xs px-2 py-1 rounded-full transition-all",
+      status === "saving" && "text-muted-foreground",
+      status === "saved" && "text-green-600",
+      status === "error" && "text-destructive",
+    )}>
+      {status === "saving" && <><Loader2 className="w-3 h-3 animate-spin" /> Saving…</>}
+      {status === "saved" && <><CheckCircle2 className="w-3 h-3" /> Saved</>}
+      {status === "error" && <><CloudOff className="w-3 h-3" /> Save failed</>}
+    </div>
+  );
+}
+
+export default function PlanWizard({ initialData, onSave, onAutoSave, saving }) {
   const [step, setStep] = useState(initialData?.plan_type ? 1 : 0);
   const [data, setData] = useState(initialData || {});
+
+  const autoSaveStatus = useAutoSave(onAutoSave, data, 1500, !!onAutoSave);
 
   const canNext = () => {
     if (step === 0) return !!data.plan_type;
@@ -36,20 +55,13 @@ export default function PlanWizard({ initialData, onSave, saving }) {
 
   const renderStep = () => {
     switch (step) {
-      case 0:
-        return <PlanTypeSelector selected={data.plan_type} onSelect={handleTypeSelect} />;
-      case 1:
-        return <EmployerInfoStep data={data} onChange={setData} />;
-      case 2:
-        return <PlanDetailsStep data={data} onChange={setData} />;
-      case 3:
-        return <EligibilityStep data={data} onChange={setData} />;
-      case 4:
-        return <BenefitsStep data={data} onChange={setData} />;
-      case 5:
-        return <ReviewStep data={data} />;
-      default:
-        return null;
+      case 0: return <PlanTypeSelector selected={data.plan_type} onSelect={handleTypeSelect} />;
+      case 1: return <EmployerInfoStep data={data} onChange={setData} />;
+      case 2: return <PlanDetailsStep data={data} onChange={setData} />;
+      case 3: return <EligibilityStep data={data} onChange={setData} />;
+      case 4: return <BenefitsStep data={data} onChange={setData} />;
+      case 5: return <ReviewStep data={data} />;
+      default: return null;
     }
   };
 
@@ -79,6 +91,11 @@ export default function PlanWizard({ initialData, onSave, saving }) {
             <span className="hidden sm:inline">{s.label}</span>
           </button>
         ))}
+
+        {/* Auto-save indicator */}
+        <div className="ml-auto flex-shrink-0">
+          <AutoSaveIndicator status={autoSaveStatus} />
+        </div>
       </div>
 
       {/* Step content */}

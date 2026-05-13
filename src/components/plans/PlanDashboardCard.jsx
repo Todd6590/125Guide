@@ -32,7 +32,7 @@ export default function PlanDashboardCard({ plan, onDelete }) {
         </div>
       )}
       <Link
-        to={`/plan/${plan.id}`}
+        to={plan.status === "draft" ? `/edit/${plan.id}` : `/plan/${plan.id}`}
         className={`block bg-card rounded-xl border p-5 hover:shadow-md hover:border-primary/30 transition-all duration-200 ${plan.is_sample ? "border-amber-200 pt-6" : ""}`}
       >
         <div className="flex items-start justify-between">

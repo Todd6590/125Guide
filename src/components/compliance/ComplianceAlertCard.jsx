@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, ChevronUp, CheckCircle, X, FileDown, AlertTriangle, XCircle, Info } from "lucide-react";
+import { ChevronDown, ChevronUp, CheckCircle, X, FileDown, Mail, AlertTriangle, XCircle, Info } from "lucide-react";
 import { format } from "date-fns";
 import generateAmendmentPDF from "@/lib/generateAmendmentPDF";
+import AmendmentEmailModal from "@/components/compliance/AmendmentEmailModal";
 
 const SEVERITY_CONFIG = {
   critical: { color: "bg-red-100 text-red-700 border-red-200", icon: XCircle, iconColor: "text-red-500", badge: "bg-red-100 text-red-700" },
@@ -19,6 +20,7 @@ const STATUS_BADGE = {
 
 export default function ComplianceAlertCard({ alert, onResolve, onDismiss }) {
   const [expanded, setExpanded] = useState(false);
+  const [emailOpen, setEmailOpen] = useState(false);
   const cfg = SEVERITY_CONFIG[alert.severity] || SEVERITY_CONFIG.warning;
   const Icon = cfg.icon;
 
@@ -27,6 +29,7 @@ export default function ComplianceAlertCard({ alert, onResolve, onDismiss }) {
   };
 
   return (
+    <>
     <div className={`rounded-xl border shadow-sm overflow-hidden ${cfg.color}`}>
       {/* Header Row */}
       <div
@@ -92,9 +95,14 @@ export default function ComplianceAlertCard({ alert, onResolve, onDismiss }) {
             <div>
               <div className="flex items-center justify-between mb-1">
                 <p className="text-xs font-semibold uppercase tracking-wide opacity-60">Draft Amendment Language</p>
-                <Button size="sm" variant="outline" className="text-xs gap-1 h-7" onClick={handleDownload}>
-                  <FileDown className="w-3.5 h-3.5" /> Download PDF
-                </Button>
+                <div className="flex gap-1.5">
+                  <Button size="sm" variant="outline" className="text-xs gap-1 h-7" onClick={handleDownload}>
+                    <FileDown className="w-3.5 h-3.5" /> Download PDF
+                  </Button>
+                  <Button size="sm" variant="outline" className="text-xs gap-1 h-7" onClick={() => setEmailOpen(true)}>
+                    <Mail className="w-3.5 h-3.5" /> Email
+                  </Button>
+                </div>
               </div>
               <div className="bg-white border rounded-lg p-3 text-xs font-mono leading-relaxed whitespace-pre-wrap max-h-60 overflow-y-auto">
                 {alert.amendment_text}
@@ -104,5 +112,12 @@ export default function ComplianceAlertCard({ alert, onResolve, onDismiss }) {
         </div>
       )}
     </div>
+
+      <AmendmentEmailModal
+        open={emailOpen}
+        onClose={() => setEmailOpen(false)}
+        alerts={[alert]}
+      />
+    </>
   );
 }

@@ -20,11 +20,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { ShieldCheck, AlertTriangle, Info, XCircle, Loader2, RefreshCw, FileDown, CheckCircle, X } from "lucide-react";
+import { ShieldCheck, AlertTriangle, Info, XCircle, Loader2, RefreshCw, FileDown, Mail, CheckCircle, X } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import ComplianceAlertCard from "@/components/compliance/ComplianceAlertCard";
 import generateAmendmentPDF from "@/lib/generateAmendmentPDF";
+import AmendmentEmailModal from "@/components/compliance/AmendmentEmailModal";
 
 const SEVERITY_ORDER = { critical: 0, warning: 1, info: 2 };
 
@@ -34,6 +35,7 @@ export default function ComplianceReview() {
   const [severityFilter, setSeverityFilter] = useState("all");
   const [running, setRunning] = useState(false);
   const [dismissing, setDismissing] = useState(null);
+  const [bulkEmailOpen, setBulkEmailOpen] = useState(false);
 
   const { data: alerts = [], isLoading } = useQuery({
     queryKey: ["compliance-alerts"],
@@ -103,6 +105,17 @@ export default function ComplianceReview() {
         <div className="flex items-center gap-2 flex-wrap">
           <Button variant="outline" className="gap-2" onClick={handleDownloadAll}>
             <FileDown className="w-4 h-4" /> Export Amendments PDF
+          </Button>
+          <Button
+            variant="outline"
+            className="gap-2"
+            onClick={() => {
+              const open = alerts.filter(a => a.status === "open" && a.amendment_text);
+              if (!open.length) { toast.error("No open alerts with amendment text to email."); return; }
+              setBulkEmailOpen(true);
+            }}
+          >
+            <Mail className="w-4 h-4" /> Email All Amendments
           </Button>
           <Button className="gap-2" onClick={handleRunNow} disabled={running}>
             {running ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
@@ -180,6 +193,13 @@ export default function ComplianceReview() {
           ))}
         </div>
       )}
+
+      {/* Bulk email modal */}
+      <AmendmentEmailModal
+        open={bulkEmailOpen}
+        onClose={() => setBulkEmailOpen(false)}
+        alerts={alerts.filter(a => a.status === "open" && a.amendment_text)}
+      />
 
       {/* Dismiss confirm */}
       <AlertDialog open={!!dismissing} onOpenChange={() => setDismissing(null)}>

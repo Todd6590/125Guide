@@ -15,184 +15,6 @@ const POP_BENEFITS = [
   "Hospital indemnity insurance",
 ];
 
-const FSA_SECTION = ({ data, onChange }) => {
-  const update = (field, value) => onChange({ ...data, [field]: value });
-
-  return (
-    <div className="space-y-4 p-5 rounded-xl bg-muted/40 border">
-      <h4 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground">Health FSA Options</h4>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label>Maximum Annual Election</Label>
-          <Input
-            type="number"
-            placeholder="3,300"
-            value={data.fsa_max_election || ""}
-            onChange={(e) => update("fsa_max_election", e.target.value ? Number(e.target.value) : "")}
-          />
-          <p className="text-xs text-muted-foreground">2025 IRS limit: $3,300</p>
-        </div>
-        <div className="space-y-2">
-          <Label>Minimum Annual Election</Label>
-          <Input
-            type="number"
-            placeholder="100"
-            value={data.fsa_min_election || ""}
-            onChange={(e) => update("fsa_min_election", e.target.value ? Number(e.target.value) : "")}
-          />
-        </div>
-      </div>
-
-      <div className="flex items-center justify-between p-3 rounded-lg bg-card border">
-        <div>
-          <p className="text-sm font-medium">Grace Period (2.5 months)</p>
-          <p className="text-xs text-muted-foreground">Allow additional time to incur FSA expenses</p>
-        </div>
-        <Switch
-          checked={data.fsa_grace_period || false}
-          onCheckedChange={(v) => {
-            update("fsa_grace_period", v);
-            if (v) update("fsa_carryover", false);
-          }}
-        />
-      </div>
-
-      <div className="flex items-center justify-between p-3 rounded-lg bg-card border">
-        <div>
-          <p className="text-sm font-medium">Carryover</p>
-          <p className="text-xs text-muted-foreground">Carry unused funds to next plan year</p>
-        </div>
-        <Switch
-          checked={data.fsa_carryover || false}
-          onCheckedChange={(v) => {
-            update("fsa_carryover", v);
-            if (v) update("fsa_grace_period", false);
-          }}
-        />
-      </div>
-
-      {data.fsa_carryover && (
-        <div className="space-y-2">
-          <Label>Maximum Carryover Amount</Label>
-          <Input
-            type="number"
-            placeholder="660"
-            value={data.fsa_carryover_amount || ""}
-            onChange={(e) => update("fsa_carryover_amount", e.target.value ? Number(e.target.value) : "")}
-          />
-          <p className="text-xs text-muted-foreground">2025 IRS limit: $660</p>
-        </div>
-      )}
-    </div>
-  );
-};
-
-const DCAP_SECTION = ({ data, onChange }) => {
-  const update = (field, value) => onChange({ ...data, [field]: value });
-
-  return (
-    <div className="space-y-4 p-5 rounded-xl bg-muted/40 border">
-      <h4 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground">Dependent Care (DCAP) Options</h4>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label>Maximum Annual Election</Label>
-          <Input
-            type="number"
-            placeholder="5,000"
-            value={data.dcap_max_election || ""}
-            onChange={(e) => update("dcap_max_election", e.target.value ? Number(e.target.value) : "")}
-          />
-          <p className="text-xs text-muted-foreground">IRS limit: $5,000 ($2,500 if married filing separately)</p>
-        </div>
-        <div className="space-y-2">
-          <Label>Minimum Annual Election</Label>
-          <Input
-            type="number"
-            placeholder="100"
-            value={data.dcap_min_election || ""}
-            onChange={(e) => update("dcap_min_election", e.target.value ? Number(e.target.value) : "")}
-          />
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const LIMITED_FSA_SECTION = ({ data, onChange }) => {
-  const update = (field, value) => onChange({ ...data, [field]: value });
-
-  return (
-    <div className="space-y-4 p-5 rounded-xl bg-muted/40 border">
-      <div>
-        <h4 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground">Limited Purpose FSA Options</h4>
-        <p className="text-xs text-muted-foreground mt-1">For HSA-compatible HDHP participants — covers dental and vision expenses only.</p>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label>Maximum Annual Election</Label>
-          <Input
-            type="number"
-            placeholder="3,300"
-            value={data.limited_fsa_max_election || ""}
-            onChange={(e) => update("limited_fsa_max_election", e.target.value ? Number(e.target.value) : "")}
-          />
-          <p className="text-xs text-muted-foreground">2025 IRS limit: $3,300</p>
-        </div>
-        <div className="space-y-2">
-          <Label>Minimum Annual Election</Label>
-          <Input
-            type="number"
-            placeholder="100"
-            value={data.limited_fsa_min_election || ""}
-            onChange={(e) => update("limited_fsa_min_election", e.target.value ? Number(e.target.value) : "")}
-          />
-        </div>
-      </div>
-
-      <div className="flex items-center justify-between p-3 rounded-lg bg-card border">
-        <div>
-          <p className="text-sm font-medium">Grace Period (2.5 months)</p>
-          <p className="text-xs text-muted-foreground">Allow additional time to incur expenses</p>
-        </div>
-        <Switch
-          checked={data.limited_fsa_grace_period || false}
-          onCheckedChange={(v) => {
-            update("limited_fsa_grace_period", v);
-            if (v) update("limited_fsa_carryover", false);
-          }}
-        />
-      </div>
-
-      <div className="flex items-center justify-between p-3 rounded-lg bg-card border">
-        <div>
-          <p className="text-sm font-medium">Carryover</p>
-          <p className="text-xs text-muted-foreground">Carry unused funds to next plan year</p>
-        </div>
-        <Switch
-          checked={data.limited_fsa_carryover || false}
-          onCheckedChange={(v) => {
-            update("limited_fsa_carryover", v);
-            if (v) update("limited_fsa_grace_period", false);
-          }}
-        />
-      </div>
-
-      {data.limited_fsa_carryover && (
-        <div className="space-y-2">
-          <Label>Maximum Carryover Amount</Label>
-          <Input
-            type="number"
-            placeholder="660"
-            value={data.limited_fsa_carryover_amount || ""}
-            onChange={(e) => update("limited_fsa_carryover_amount", e.target.value ? Number(e.target.value) : "")}
-          />
-          <p className="text-xs text-muted-foreground">2025 IRS limit: $660</p>
-        </div>
-      )}
-    </div>
-  );
-};
-
 export default function BenefitsStep({ data, onChange }) {
   const update = (field, value) => onChange({ ...data, [field]: value });
   const planType = data.plan_type;
@@ -235,10 +57,176 @@ export default function BenefitsStep({ data, onChange }) {
         </div>
       )}
 
-      {showFSA && <FSA_SECTION data={data} onChange={onChange} />}
-      {showLimitedFSA && <LIMITED_FSA_SECTION data={data} onChange={onChange} />}
-      {showDCAP && <DCAP_SECTION data={data} onChange={onChange} />}
+      {/* Health FSA */}
+      {showFSA && (
+        <div className="space-y-4 p-5 rounded-xl bg-muted/40 border">
+          <h4 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground">Health FSA Options</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Maximum Annual Election</Label>
+              <Input
+                type="number"
+                placeholder="3,300"
+                value={data.fsa_max_election || ""}
+                onChange={(e) => update("fsa_max_election", e.target.value ? Number(e.target.value) : "")}
+              />
+              <p className="text-xs text-muted-foreground">2025 IRS limit: $3,300</p>
+            </div>
+            <div className="space-y-2">
+              <Label>Minimum Annual Election</Label>
+              <Input
+                type="number"
+                placeholder="100"
+                value={data.fsa_min_election || ""}
+                onChange={(e) => update("fsa_min_election", e.target.value ? Number(e.target.value) : "")}
+              />
+            </div>
+          </div>
 
+          <div className="flex items-center justify-between p-3 rounded-lg bg-card border">
+            <div>
+              <p className="text-sm font-medium">Grace Period (2.5 months)</p>
+              <p className="text-xs text-muted-foreground">Allow additional time to incur FSA expenses</p>
+            </div>
+            <Switch
+              checked={!!data.fsa_grace_period}
+              onCheckedChange={(v) => {
+                update("fsa_grace_period", v);
+                if (v) update("fsa_carryover", false);
+              }}
+            />
+          </div>
+
+          <div className="flex items-center justify-between p-3 rounded-lg bg-card border">
+            <div>
+              <p className="text-sm font-medium">Carryover</p>
+              <p className="text-xs text-muted-foreground">Carry unused funds to next plan year</p>
+            </div>
+            <Switch
+              checked={!!data.fsa_carryover}
+              onCheckedChange={(v) => {
+                update("fsa_carryover", v);
+                if (v) update("fsa_grace_period", false);
+              }}
+            />
+          </div>
+
+          {data.fsa_carryover && (
+            <div className="space-y-2">
+              <Label>Maximum Carryover Amount</Label>
+              <Input
+                type="number"
+                placeholder="660"
+                value={data.fsa_carryover_amount || ""}
+                onChange={(e) => update("fsa_carryover_amount", e.target.value ? Number(e.target.value) : "")}
+              />
+              <p className="text-xs text-muted-foreground">2025 IRS limit: $660</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Limited Purpose FSA */}
+      {showLimitedFSA && (
+        <div className="space-y-4 p-5 rounded-xl bg-muted/40 border">
+          <div>
+            <h4 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground">Limited Purpose FSA Options</h4>
+            <p className="text-xs text-muted-foreground mt-1">For HSA-compatible HDHP participants — covers dental and vision expenses only.</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Maximum Annual Election</Label>
+              <Input
+                type="number"
+                placeholder="3,300"
+                value={data.limited_fsa_max_election || ""}
+                onChange={(e) => update("limited_fsa_max_election", e.target.value ? Number(e.target.value) : "")}
+              />
+              <p className="text-xs text-muted-foreground">2025 IRS limit: $3,300</p>
+            </div>
+            <div className="space-y-2">
+              <Label>Minimum Annual Election</Label>
+              <Input
+                type="number"
+                placeholder="100"
+                value={data.limited_fsa_min_election || ""}
+                onChange={(e) => update("limited_fsa_min_election", e.target.value ? Number(e.target.value) : "")}
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between p-3 rounded-lg bg-card border">
+            <div>
+              <p className="text-sm font-medium">Grace Period (2.5 months)</p>
+              <p className="text-xs text-muted-foreground">Allow additional time to incur expenses</p>
+            </div>
+            <Switch
+              checked={!!data.limited_fsa_grace_period}
+              onCheckedChange={(v) => {
+                update("limited_fsa_grace_period", v);
+                if (v) update("limited_fsa_carryover", false);
+              }}
+            />
+          </div>
+
+          <div className="flex items-center justify-between p-3 rounded-lg bg-card border">
+            <div>
+              <p className="text-sm font-medium">Carryover</p>
+              <p className="text-xs text-muted-foreground">Carry unused funds to next plan year</p>
+            </div>
+            <Switch
+              checked={!!data.limited_fsa_carryover}
+              onCheckedChange={(v) => {
+                update("limited_fsa_carryover", v);
+                if (v) update("limited_fsa_grace_period", false);
+              }}
+            />
+          </div>
+
+          {data.limited_fsa_carryover && (
+            <div className="space-y-2">
+              <Label>Maximum Carryover Amount</Label>
+              <Input
+                type="number"
+                placeholder="660"
+                value={data.limited_fsa_carryover_amount || ""}
+                onChange={(e) => update("limited_fsa_carryover_amount", e.target.value ? Number(e.target.value) : "")}
+              />
+              <p className="text-xs text-muted-foreground">2025 IRS limit: $660</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* DCAP */}
+      {showDCAP && (
+        <div className="space-y-4 p-5 rounded-xl bg-muted/40 border">
+          <h4 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground">Dependent Care (DCAP) Options</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Maximum Annual Election</Label>
+              <Input
+                type="number"
+                placeholder="5,000"
+                value={data.dcap_max_election || ""}
+                onChange={(e) => update("dcap_max_election", e.target.value ? Number(e.target.value) : "")}
+              />
+              <p className="text-xs text-muted-foreground">IRS limit: $5,000 ($2,500 if married filing separately)</p>
+            </div>
+            <div className="space-y-2">
+              <Label>Minimum Annual Election</Label>
+              <Input
+                type="number"
+                placeholder="100"
+                value={data.dcap_min_election || ""}
+                onChange={(e) => update("dcap_min_election", e.target.value ? Number(e.target.value) : "")}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Employer Contributions */}
       <div className="space-y-4 p-5 rounded-xl bg-muted/40 border">
         <h4 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground">Employer Contributions</h4>
         <div className="flex items-center justify-between p-3 rounded-lg bg-card border">
@@ -247,7 +235,7 @@ export default function BenefitsStep({ data, onChange }) {
             <p className="text-xs text-muted-foreground">Does the employer contribute to employee benefits?</p>
           </div>
           <Switch
-            checked={data.employer_contribution || false}
+            checked={!!data.employer_contribution}
             onCheckedChange={(v) => update("employer_contribution", v)}
           />
         </div>

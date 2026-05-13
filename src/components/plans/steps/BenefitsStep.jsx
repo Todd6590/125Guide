@@ -15,8 +15,31 @@ const POP_BENEFITS = [
   "Hospital indemnity insurance",
 ];
 
+// Currency input with $ prefix
+function CurrencyInput({ value, onChange, placeholder, hint }) {
+  return (
+    <div className="space-y-1.5">
+      <div className="relative">
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">$</span>
+        <Input
+          type="number"
+          placeholder={placeholder}
+          value={value || ""}
+          onChange={(e) => onChange(e.target.value ? Number(e.target.value) : "")}
+          className="pl-7"
+        />
+      </div>
+      {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
+    </div>
+  );
+}
+
 export default function BenefitsStep({ data, onChange }) {
+  // Single-field update
   const update = (field, value) => onChange({ ...data, [field]: value });
+  // Multi-field update in one call (fixes toggle stale-state bug)
+  const updateMany = (fields) => onChange({ ...data, ...fields });
+
   const planType = data.plan_type;
 
   const toggleBenefit = (benefit) => {
@@ -29,7 +52,7 @@ export default function BenefitsStep({ data, onChange }) {
 
   const showPOP = ["pop", "full_flex", "simple_cafeteria"].includes(planType);
   const showFSA = ["health_fsa", "full_flex", "simple_cafeteria"].includes(planType);
-  const showLimitedFSA = ["limited_fsa"].includes(planType);
+  const showLimitedFSA = planType === "limited_fsa";
   const showDCAP = ["dcap", "full_flex", "simple_cafeteria"].includes(planType);
 
   return (
@@ -64,21 +87,19 @@ export default function BenefitsStep({ data, onChange }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Maximum Annual Election</Label>
-              <Input
-                type="number"
-                placeholder="3,300"
-                value={data.fsa_max_election || ""}
-                onChange={(e) => update("fsa_max_election", e.target.value ? Number(e.target.value) : "")}
+              <CurrencyInput
+                value={data.fsa_max_election}
+                onChange={(v) => update("fsa_max_election", v)}
+                placeholder="3300"
+                hint="2025 IRS limit: $3,300"
               />
-              <p className="text-xs text-muted-foreground">2025 IRS limit: $3,300</p>
             </div>
             <div className="space-y-2">
               <Label>Minimum Annual Election</Label>
-              <Input
-                type="number"
+              <CurrencyInput
+                value={data.fsa_min_election}
+                onChange={(v) => update("fsa_min_election", v)}
                 placeholder="100"
-                value={data.fsa_min_election || ""}
-                onChange={(e) => update("fsa_min_election", e.target.value ? Number(e.target.value) : "")}
               />
             </div>
           </div>
@@ -90,10 +111,9 @@ export default function BenefitsStep({ data, onChange }) {
             </div>
             <Switch
               checked={!!data.fsa_grace_period}
-              onCheckedChange={(v) => {
-                update("fsa_grace_period", v);
-                if (v) update("fsa_carryover", false);
-              }}
+              onCheckedChange={(v) =>
+                updateMany({ fsa_grace_period: v, fsa_carryover: v ? false : data.fsa_carryover })
+              }
             />
           </div>
 
@@ -104,23 +124,21 @@ export default function BenefitsStep({ data, onChange }) {
             </div>
             <Switch
               checked={!!data.fsa_carryover}
-              onCheckedChange={(v) => {
-                update("fsa_carryover", v);
-                if (v) update("fsa_grace_period", false);
-              }}
+              onCheckedChange={(v) =>
+                updateMany({ fsa_carryover: v, fsa_grace_period: v ? false : data.fsa_grace_period })
+              }
             />
           </div>
 
           {data.fsa_carryover && (
             <div className="space-y-2">
               <Label>Maximum Carryover Amount</Label>
-              <Input
-                type="number"
+              <CurrencyInput
+                value={data.fsa_carryover_amount}
+                onChange={(v) => update("fsa_carryover_amount", v)}
                 placeholder="660"
-                value={data.fsa_carryover_amount || ""}
-                onChange={(e) => update("fsa_carryover_amount", e.target.value ? Number(e.target.value) : "")}
+                hint="2025 IRS limit: $660"
               />
-              <p className="text-xs text-muted-foreground">2025 IRS limit: $660</p>
             </div>
           )}
         </div>
@@ -136,21 +154,19 @@ export default function BenefitsStep({ data, onChange }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Maximum Annual Election</Label>
-              <Input
-                type="number"
-                placeholder="3,300"
-                value={data.limited_fsa_max_election || ""}
-                onChange={(e) => update("limited_fsa_max_election", e.target.value ? Number(e.target.value) : "")}
+              <CurrencyInput
+                value={data.limited_fsa_max_election}
+                onChange={(v) => update("limited_fsa_max_election", v)}
+                placeholder="3300"
+                hint="2025 IRS limit: $3,300"
               />
-              <p className="text-xs text-muted-foreground">2025 IRS limit: $3,300</p>
             </div>
             <div className="space-y-2">
               <Label>Minimum Annual Election</Label>
-              <Input
-                type="number"
+              <CurrencyInput
+                value={data.limited_fsa_min_election}
+                onChange={(v) => update("limited_fsa_min_election", v)}
                 placeholder="100"
-                value={data.limited_fsa_min_election || ""}
-                onChange={(e) => update("limited_fsa_min_election", e.target.value ? Number(e.target.value) : "")}
               />
             </div>
           </div>
@@ -162,10 +178,9 @@ export default function BenefitsStep({ data, onChange }) {
             </div>
             <Switch
               checked={!!data.limited_fsa_grace_period}
-              onCheckedChange={(v) => {
-                update("limited_fsa_grace_period", v);
-                if (v) update("limited_fsa_carryover", false);
-              }}
+              onCheckedChange={(v) =>
+                updateMany({ limited_fsa_grace_period: v, limited_fsa_carryover: v ? false : data.limited_fsa_carryover })
+              }
             />
           </div>
 
@@ -176,23 +191,21 @@ export default function BenefitsStep({ data, onChange }) {
             </div>
             <Switch
               checked={!!data.limited_fsa_carryover}
-              onCheckedChange={(v) => {
-                update("limited_fsa_carryover", v);
-                if (v) update("limited_fsa_grace_period", false);
-              }}
+              onCheckedChange={(v) =>
+                updateMany({ limited_fsa_carryover: v, limited_fsa_grace_period: v ? false : data.limited_fsa_grace_period })
+              }
             />
           </div>
 
           {data.limited_fsa_carryover && (
             <div className="space-y-2">
               <Label>Maximum Carryover Amount</Label>
-              <Input
-                type="number"
+              <CurrencyInput
+                value={data.limited_fsa_carryover_amount}
+                onChange={(v) => update("limited_fsa_carryover_amount", v)}
                 placeholder="660"
-                value={data.limited_fsa_carryover_amount || ""}
-                onChange={(e) => update("limited_fsa_carryover_amount", e.target.value ? Number(e.target.value) : "")}
+                hint="2025 IRS limit: $660"
               />
-              <p className="text-xs text-muted-foreground">2025 IRS limit: $660</p>
             </div>
           )}
         </div>
@@ -205,21 +218,19 @@ export default function BenefitsStep({ data, onChange }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Maximum Annual Election</Label>
-              <Input
-                type="number"
-                placeholder="5,000"
-                value={data.dcap_max_election || ""}
-                onChange={(e) => update("dcap_max_election", e.target.value ? Number(e.target.value) : "")}
+              <CurrencyInput
+                value={data.dcap_max_election}
+                onChange={(v) => update("dcap_max_election", v)}
+                placeholder="5000"
+                hint="IRS limit: $5,000 ($2,500 if married filing separately)"
               />
-              <p className="text-xs text-muted-foreground">IRS limit: $5,000 ($2,500 if married filing separately)</p>
             </div>
             <div className="space-y-2">
               <Label>Minimum Annual Election</Label>
-              <Input
-                type="number"
+              <CurrencyInput
+                value={data.dcap_min_election}
+                onChange={(v) => update("dcap_min_election", v)}
                 placeholder="100"
-                value={data.dcap_min_election || ""}
-                onChange={(e) => update("dcap_min_election", e.target.value ? Number(e.target.value) : "")}
               />
             </div>
           </div>

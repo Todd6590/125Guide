@@ -276,7 +276,15 @@ export function generatePlanPDF(plan) {
   doc.text("Print Name and Title", col1X, lineY2 + 10);
   doc.text("Date", col1X, lineY3 + 10);
 
-  // Save
+  // Force download via blob URL
   const fileName = `${(p.plan_name || "plan-document").replace(/\s+/g, "-").toLowerCase()}.pdf`;
-  doc.save(fileName);
+  const blob = doc.output("blob");
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }

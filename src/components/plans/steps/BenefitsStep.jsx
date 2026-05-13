@@ -91,7 +91,7 @@ export default function BenefitsStep({ data, onChange }) {
                 value={data.fsa_max_election}
                 onChange={(v) => update("fsa_max_election", v)}
                 placeholder="3300"
-                hint="2025 IRS limit: $3,300"
+                hint="2026 IRS limit: $3,400"
               />
             </div>
             <div className="space-y-2">
@@ -158,7 +158,7 @@ export default function BenefitsStep({ data, onChange }) {
                 value={data.limited_fsa_max_election}
                 onChange={(v) => update("limited_fsa_max_election", v)}
                 placeholder="3300"
-                hint="2025 IRS limit: $3,300"
+                hint="2026 IRS limit: $3,400"
               />
             </div>
             <div className="space-y-2">
@@ -221,8 +221,8 @@ export default function BenefitsStep({ data, onChange }) {
               <CurrencyInput
                 value={data.dcap_max_election}
                 onChange={(v) => update("dcap_max_election", v)}
-                placeholder="5000"
-                hint="IRS limit: $5,000 ($2,500 if married filing separately)"
+                placeholder="7500"
+                hint="2026 IRS limit: $7,500 ($3,750 if married filing separately)"
               />
             </div>
             <div className="space-y-2">

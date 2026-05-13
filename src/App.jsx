@@ -15,6 +15,7 @@ import Clients from '@/pages/Clients';
 import ComplianceReview from '@/pages/ComplianceReview';
 import Profile from '@/pages/Profile';
 import AdminDashboard from '@/pages/AdminDashboard';
+import PlansManagement from '@/pages/PlansManagement';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -47,6 +48,7 @@ const AuthenticatedApp = () => {
         <Route path="/compliance" element={<ComplianceReview />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/plans" element={<PlansManagement />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

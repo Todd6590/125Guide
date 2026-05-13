@@ -1,15 +1,18 @@
 import { useState, useEffect, useRef } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
-import { LayoutDashboard, FilePlus, Users, ShieldCheck, User, LogOut, Settings } from "lucide-react";
+import { LayoutDashboard, FilePlus, Users, ShieldCheck, User, LogOut, Settings, FileText, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { base44 } from "@/api/base44Client";
 import UserAvatar from "@/components/user/UserAvatar";
+import NavDropdown from "@/components/layout/NavDropdown";
 
-const navItems = [
-  { path: "/", label: "Dashboard", icon: LayoutDashboard },
-  { path: "/clients", label: "Clients", icon: Users },
-  { path: "/compliance", label: "Compliance", icon: ShieldCheck },
+const plansItems = [
   { path: "/create", label: "New Plan", icon: FilePlus },
+  { path: "/plans", label: "Existing Plans", icon: FileText },
+];
+
+const complianceItems = [
+  { path: "/compliance", label: "Compliance", icon: ShieldCheck },
   { path: "/admin", label: "IRS Rules", icon: Settings },
 ];
 
@@ -101,25 +104,32 @@ export default function AppLayout() {
 
             <div className="flex items-center gap-1">
               <nav className="flex items-center gap-1">
-                {navItems.map((item) => {
-                  const Icon = item.icon;
-                  const isActive = location.pathname === item.path;
-                  return (
-                    <Link
-                      key={item.path}
-                      to={item.path}
-                      className={cn(
-                        "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all",
-                        isActive
-                          ? "bg-white/15 text-primary-foreground"
-                          : "text-primary-foreground/70 hover:text-primary-foreground hover:bg-white/10"
-                      )}
-                    >
-                      <Icon className="w-4 h-4" />
-                      <span className="hidden md:inline">{item.label}</span>
-                    </Link>
-                  );
-                })}
+                <Link
+                  to="/"
+                  className={cn(
+                    "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all",
+                    location.pathname === "/"
+                      ? "bg-white/15 text-primary-foreground"
+                      : "text-primary-foreground/70 hover:text-primary-foreground hover:bg-white/10"
+                  )}
+                >
+                  <LayoutDashboard className="w-4 h-4" />
+                  <span className="hidden md:inline">Dashboard</span>
+                </Link>
+                <Link
+                  to="/clients"
+                  className={cn(
+                    "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all",
+                    location.pathname === "/clients"
+                      ? "bg-white/15 text-primary-foreground"
+                      : "text-primary-foreground/70 hover:text-primary-foreground hover:bg-white/10"
+                  )}
+                >
+                  <Users className="w-4 h-4" />
+                  <span className="hidden md:inline">Clients</span>
+                </Link>
+                <NavDropdown label="Plans" icon={FilePlus} items={plansItems} />
+                <NavDropdown label="Compliance" icon={ShieldCheck} items={complianceItems} />
               </nav>
               <div className="ml-2 pl-2 border-l border-white/20">
                 <UserMenu />

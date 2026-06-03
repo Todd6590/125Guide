@@ -7,6 +7,9 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
 import AppLayout from '@/components/layout/AppLayout';
+import SSOGate from '@/components/SSOGate';
+import SSOLogin from '@/pages/SSOLogin';
+import AuthCallback from '@/pages/AuthCallback';
 import Dashboard from '@/pages/Dashboard';
 import CreatePlan from '@/pages/CreatePlan';
 import ViewPlan from '@/pages/ViewPlan';
@@ -40,17 +43,21 @@ const AuthenticatedApp = () => {
 
   return (
     <Routes>
-      <Route element={<AppLayout />}>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/create" element={<CreatePlan />} />
-        <Route path="/plan/:id" element={<ViewPlan />} />
-        <Route path="/edit/:id" element={<EditPlan />} />
-        <Route path="/clients" element={<Clients />} />
-        <Route path="/compliance" element={<ComplianceReview />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/plans" element={<PlansManagement />} />
-        <Route path="/ndt" element={<NondiscriminationTesting />} />
+      <Route path="/sso-login" element={<SSOLogin />} />
+      <Route path="/auth/callback" element={<AuthCallback />} />
+      <Route element={<SSOGate />}>
+        <Route element={<AppLayout />}>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/create" element={<CreatePlan />} />
+          <Route path="/plan/:id" element={<ViewPlan />} />
+          <Route path="/edit/:id" element={<EditPlan />} />
+          <Route path="/clients" element={<Clients />} />
+          <Route path="/compliance" element={<ComplianceReview />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/plans" element={<PlansManagement />} />
+          <Route path="/ndt" element={<NondiscriminationTesting />} />
+        </Route>
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

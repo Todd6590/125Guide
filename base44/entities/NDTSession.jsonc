@@ -1,0 +1,70 @@
+{
+  "name": "NDTSession",
+  "type": "object",
+  "properties": {
+    "plan_id": {
+      "type": "string",
+      "description": "ID of the associated PlanDocument"
+    },
+    "plan_name": {
+      "type": "string"
+    },
+    "test_year": {
+      "type": "number",
+      "description": "Plan year tested (e.g. 2025)"
+    },
+    "run_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "overall_result": {
+      "type": "string",
+      "enum": [
+        "pass",
+        "fail",
+        "warning"
+      ],
+      "description": "Overall pass/fail result"
+    },
+    "eligibility_test_pass": {
+      "type": "boolean"
+    },
+    "benefits_test_pass": {
+      "type": "boolean"
+    },
+    "concentration_test_pass": {
+      "type": "boolean"
+    },
+    "adp_test_pass": {
+      "type": "boolean",
+      "description": "Average Deferral Percentage test"
+    },
+    "test_results_json": {
+      "type": "object",
+      "description": "Full detailed test results and stats"
+    },
+    "remediation_steps": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "AI-generated remediation steps for failed tests"
+    },
+    "participant_count": {
+      "type": "number"
+    },
+    "hce_count": {
+      "type": "number"
+    },
+    "nhce_count": {
+      "type": "number"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "plan_id",
+    "test_year"
+  ]
+}

@@ -1,0 +1,105 @@
+{
+  "name": "Participant",
+  "type": "object",
+  "properties": {
+    "plan_id": {
+      "type": "string",
+      "description": "ID of the associated PlanDocument"
+    },
+    "plan_name": {
+      "type": "string",
+      "description": "Cached plan name"
+    },
+    "first_name": {
+      "type": "string"
+    },
+    "last_name": {
+      "type": "string"
+    },
+    "ssn_last4": {
+      "type": "string",
+      "description": "Last 4 digits of SSN (for identification only)"
+    },
+    "job_title": {
+      "type": "string"
+    },
+    "employment_type": {
+      "type": "string",
+      "enum": [
+        "full_time",
+        "part_time",
+        "seasonal",
+        "leased"
+      ],
+      "default": "full_time"
+    },
+    "hire_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "annual_compensation": {
+      "type": "number",
+      "description": "Annual W-2 compensation"
+    },
+    "ownership_pct": {
+      "type": "number",
+      "description": "Ownership percentage (0-100)"
+    },
+    "is_officer": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_hce": {
+      "type": "boolean",
+      "default": false,
+      "description": "Highly Compensated Employee"
+    },
+    "is_key_employee": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_eligible": {
+      "type": "boolean",
+      "default": true,
+      "description": "Eligible to participate in plan"
+    },
+    "is_participating": {
+      "type": "boolean",
+      "default": false,
+      "description": "Actually enrolled/participating"
+    },
+    "fsa_election": {
+      "type": "number",
+      "description": "Annual Health FSA election amount"
+    },
+    "dcap_election": {
+      "type": "number",
+      "description": "Annual DCAP election amount"
+    },
+    "hsa_employee_contribution": {
+      "type": "number"
+    },
+    "premium_only_election": {
+      "type": "number",
+      "description": "Annual premium only (POP) election"
+    },
+    "family_status": {
+      "type": "string",
+      "enum": [
+        "single",
+        "married",
+        "head_of_household"
+      ],
+      "default": "single"
+    },
+    "dependents_count": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "plan_id",
+    "first_name",
+    "last_name"
+  ]
+}

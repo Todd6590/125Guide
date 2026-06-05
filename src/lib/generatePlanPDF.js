@@ -250,6 +250,138 @@ export function generatePlanPDF(plan) {
   addBoldParagraph("7.5 Governing Law. ", "This Plan shall be construed in accordance with applicable federal law and, to the extent not preempted, the laws of the state in which the Employer is located.");
   addBoldParagraph("7.6 No Guarantee of Employment. ", "Nothing in this Plan shall be construed as a contract of employment or as granting any Employee the right to continued employment.");
 
+  // ── ERISA WRAP SPD ──
+  doc.addPage();
+  y = 72;
+
+  addHeading1("ERISA WRAP SUMMARY PLAN DESCRIPTION");
+  doc.setFont("helvetica", "italic");
+  doc.setFontSize(9);
+  doc.setTextColor(100, 100, 100);
+  doc.text("As Required by the Employee Retirement Income Security Act of 1974 (ERISA)", pageW / 2, y, { align: "center" });
+  y += 20;
+  addDivider();
+
+  addParagraph(
+    `This Summary Plan Description ("SPD") is furnished to you as required by the Employee Retirement Income Security Act of 1974, as amended ("ERISA"). ` +
+    `This SPD describes the key features of the ${blank(p.plan_name)} (the "Plan") sponsored by ${blank(p.employer_name)}. ` +
+    `This document, together with any insurance certificates, evidence of coverage documents, or other benefit materials provided to you, ` +
+    `constitutes the complete SPD for the Plan.`
+  );
+
+  addHeading2("GENERAL PLAN INFORMATION");
+  addBoldParagraph("Plan Name: ", blank(p.plan_name));
+  addBoldParagraph("Plan Sponsor / Employer: ", `${blank(p.employer_name)}, EIN: ${blank(p.employer_ein)}`);
+  addBoldParagraph("Employer Address: ", blank(addr));
+  if (p.employer_phone) addBoldParagraph("Employer Phone: ", blank(p.employer_phone));
+  addBoldParagraph("Plan Number: ", blank(p.plan_number));
+  addBoldParagraph("Plan Year: ", `${formatDate(p.plan_year_start)} through ${formatDate(p.plan_year_end)}`);
+  addBoldParagraph("Original Effective Date: ", formatDate(p.effective_date));
+  addBoldParagraph("Type of Plan: ", "Welfare Benefit Plan — Section 125 Cafeteria Plan");
+  addBoldParagraph("Type of Administration: ", "Employer/Plan Administrator with Third-Party Administrator as applicable");
+
+  addHeading2("PLAN ADMINISTRATOR");
+  addParagraph(
+    `${blank(p.plan_administrator_name)}${p.plan_administrator_title ? `, ${p.plan_administrator_title}` : ""}, ${blank(p.employer_name)}, ${blank(addr)}` +
+    (p.plan_administrator_phone ? ` | Phone: ${p.plan_administrator_phone}` : "") +
+    (p.plan_administrator_email ? ` | Email: ${p.plan_administrator_email}` : "")
+  );
+  addParagraph(
+    "The Plan Administrator is responsible for the overall operation and administration of the Plan and is the agent for service of legal process. " +
+    "Service of legal process may also be made upon the Plan Sponsor at the address listed above."
+  );
+
+  addHeading2("PLAN FUNDING AND TYPE OF BENEFITS");
+  addParagraph(
+    "The Plan is funded entirely through Participant salary reduction contributions and, where applicable, Employer contributions. " +
+    "Benefits are paid either directly by the insurance carrier or through reimbursement accounts maintained under the Plan. " +
+    "The Plan does not hold trust assets for welfare benefits subject to ERISA."
+  );
+  if (p.claims_administrator) addBoldParagraph("Claims Administrator / TPA: ", p.claims_administrator);
+
+  addHeading2("ELIGIBILITY FOR PARTICIPATION");
+  addParagraph(
+    `${blank(p.eligibility_class || "All common-law employees of the Employer")} are eligible to participate in this Plan. ` +
+    "Employees must satisfy any applicable waiting period before becoming eligible to enroll. " +
+    "See Article III of the Plan Document for complete eligibility requirements. Participation is voluntary."
+  );
+
+  addHeading2("BENEFITS PROVIDED UNDER THE PLAN");
+  addParagraph("This Plan provides the following benefits, as elected by eligible Participants:");
+  const benefitItems = [];
+  if (showPOP) benefitItems.push("Pre-Tax Premium Payment (POP) — allows eligible employees to pay their share of employer-sponsored insurance premiums on a pre-tax basis through salary reduction.");
+  if (showFSA) benefitItems.push("Health Flexible Spending Account (Health FSA) — allows eligible employees to set aside pre-tax dollars for eligible medical, dental, and vision expenses under Section 213(d) of the Code.");
+  if (showLimitedFSA) benefitItems.push("Limited Purpose FSA — allows employees enrolled in an HSA-eligible HDHP to set aside pre-tax dollars for eligible dental and vision expenses only.");
+  if (showDCAP) benefitItems.push("Dependent Care Assistance Program (DCAP) — allows eligible employees to set aside pre-tax dollars for eligible dependent care expenses under Section 129 of the Code.");
+  if (benefitItems.length) addBulletList(benefitItems);
+  addParagraph("For full details on benefit limits, carryover, and grace periods, refer to Article IV of the Plan Document and any accompanying benefit summaries or insurance certificates.");
+
+  addHeading2("COBRA CONTINUATION COVERAGE RIGHTS");
+  addParagraph(
+    "If the Plan includes any group health benefits (such as a Health FSA or group medical premiums), Participants and their covered dependents may have the right to elect COBRA continuation coverage " +
+    "upon a qualifying event. Qualifying events include: termination of employment (other than for gross misconduct), reduction in hours, death of the covered employee, divorce or legal separation, " +
+    "a dependent child ceasing to qualify as a dependent, or the employee becoming entitled to Medicare. COBRA must be elected within 60 days of receiving notice. " +
+    "The cost of COBRA coverage may be up to 102% of the applicable premium. For the Health FSA, COBRA applies only if the employee has a positive account balance at the time of the qualifying event."
+  );
+
+  addHeading2("HIPAA SPECIAL ENROLLMENT RIGHTS");
+  addParagraph(
+    "If the Plan includes group health benefits, Participants who lose other health coverage or who experience certain family status changes (marriage, birth, adoption, or placement for adoption) " +
+    "may be entitled to special enrollment rights under HIPAA. Special enrollment must generally be requested within 30 days of the qualifying event. Contact the Plan Administrator for more information."
+  );
+
+  addHeading2("PRIVACY OF HEALTH INFORMATION (HIPAA)");
+  addParagraph(
+    "To the extent the Plan covers health benefits, the Plan is subject to the HIPAA privacy and security rules. " +
+    "The Plan Sponsor has certified it will not use Protected Health Information (PHI) for employment-related actions and has agreed to safeguard PHI. " +
+    "Participants have the right to access and request amendment of their PHI. A separate HIPAA Notice of Privacy Practices is available from the Plan Administrator upon request."
+  );
+
+  addHeading2("WOMEN'S HEALTH AND CANCER RIGHTS ACT (WHCRA)");
+  addParagraph(
+    "If the Plan provides medical and surgical benefits for mastectomy, it must also provide coverage for reconstructive surgery, prostheses, and treatment of physical complications, including lymphedemas. " +
+    "Contact the Plan Administrator or applicable insurance carrier for details."
+  );
+
+  addHeading2("NEWBORNS' AND MOTHERS' HEALTH PROTECTION ACT");
+  addParagraph(
+    "If the Plan provides benefits for maternity or newborn infant care, the Plan may not restrict benefits for a hospital stay to less than 48 hours following a normal vaginal delivery " +
+    "or 96 hours following a cesarean section. Contact the Plan Administrator or applicable insurance carrier for details."
+  );
+
+  addHeading2("CLAIMS AND APPEALS PROCEDURES");
+  addBoldParagraph("Filing a Claim: ", `All claims for benefits must be submitted in writing to the Plan Administrator or designated Claims Administrator within ${blank(p.claims_filing_deadline || "90 days")} following the end of the Plan Year in which the expense was incurred.`);
+  addBoldParagraph("Claim Denial: ", "If your claim is wholly or partially denied, you will receive written notice within 30 days (or 45 days for disability-related claims) explaining the reason for denial, the Plan provisions relied upon, and a description of the appeals process.");
+  addBoldParagraph("Appeals: ", "You may appeal a denied claim within 180 days of receiving the denial notice by submitting a written appeal to the Plan Administrator. A decision will be rendered within 60 days, with a possible 45-day extension.");
+  addBoldParagraph("External Review: ", "For health benefit claims, if your internal appeal is denied, you may have the right to request an independent external review. Contact the Plan Administrator for more information.");
+
+  addHeading2("YOUR RIGHTS UNDER ERISA");
+  addParagraph("As a participant in this Plan, you are entitled to the following rights and protections under ERISA:");
+  addBulletList([
+    "Receive information about the Plan and benefits — Examine, without charge, all Plan documents at the Plan Administrator's office, including the latest annual report (Form 5500, if applicable). Obtain copies of Plan documents upon written request (reasonable copy fee may apply).",
+    "Continue group health plan coverage — Continue health care coverage for yourself, your spouse, or your dependents following a COBRA qualifying event.",
+    "Prudent actions by plan fiduciaries — The fiduciaries who operate your Plan have a duty to act prudently and in the interest of all Plan Participants and beneficiaries.",
+    "Enforce your rights — If your claim for a benefit is denied or ignored, you have the right to know why, to obtain copies of relevant documents without charge, and to appeal the denial within the prescribed time schedules.",
+    "Assistance with questions — Contact the nearest office of the Employee Benefits Security Administration (EBSA), U.S. Department of Labor, or visit www.dol.gov/ebsa. No one, including your employer, may discriminate against you for exercising your ERISA rights.",
+  ]);
+
+  addHeading2("AMENDMENT AND TERMINATION");
+  addParagraph(
+    "The Employer reserves the right to amend, modify, or terminate this Plan at any time, subject to applicable law. " +
+    "Participants will be notified as required. No amendment or termination shall reduce or eliminate any benefit to which a Participant is already entitled."
+  );
+
+  addHeading2("AGENT FOR SERVICE OF LEGAL PROCESS");
+  addParagraph(`Legal process may be served upon: ${blank(p.plan_administrator_name)}, Plan Administrator, ${blank(p.employer_name)}, ${blank(addr)}.`);
+
+  doc.setFont("helvetica", "italic");
+  doc.setFontSize(8);
+  doc.setTextColor(120, 120, 120);
+  checkPageBreak(30);
+  const footerNote = `This ERISA Wrap Summary Plan Description is incorporated into and made a part of the ${blank(p.plan_name)}. Prepared for Plan Year beginning ${formatDate(p.plan_year_start)}.`;
+  const footerLines = doc.splitTextToSize(footerNote, contentW);
+  footerLines.forEach(line => { doc.text(line, marginL, y); y += 12; });
+
   // ── SIGNATURE ──
   checkPageBreak(160);
   addDivider();

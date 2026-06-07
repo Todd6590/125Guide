@@ -3,11 +3,12 @@ import { useNavigate, Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Pencil, Trash2, FileText, Loader2, Download, History } from "lucide-react";
+import { ArrowLeft, Pencil, Trash2, FileText, Loader2, Download, History, Shield, Sparkles } from "lucide-react";
 import { generatePlanPDF } from "@/lib/generatePlanPDF";
 import { toast } from "sonner";
-import ReviewStep from "@/components/plans/steps/ReviewStep";
 import PlanDocumentPreview from "@/components/plans/PlanDocumentPreview";
+import ErisaWrapPreview from "@/components/plans/ErispWrapPreview";
+import PlanSummaryCard from "@/components/plans/PlanSummaryCard";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -101,22 +102,27 @@ export default function ViewPlan() {
       </div>
 
       <Tabs defaultValue="summary">
-        <TabsList>
+        <TabsList className="flex-wrap">
           <TabsTrigger value="summary" className="gap-2">
-            <FileText className="w-4 h-4" /> Summary
+            <Sparkles className="w-4 h-4" /> Summary
           </TabsTrigger>
           <TabsTrigger value="document" className="gap-2">
             <FileText className="w-4 h-4" /> Plan Document
+          </TabsTrigger>
+          <TabsTrigger value="spd" className="gap-2">
+            <Shield className="w-4 h-4" /> ERISA SPD
           </TabsTrigger>
           <TabsTrigger value="history" className="gap-2">
             <History className="w-4 h-4" /> Version History
           </TabsTrigger>
         </TabsList>
+
         <TabsContent value="summary" className="mt-6">
           <div className="bg-card rounded-xl border p-6 md:p-8 shadow-sm">
-            <ReviewStep data={plan} />
+            <PlanSummaryCard plan={plan} />
           </div>
         </TabsContent>
+
         <TabsContent value="document" className="mt-6">
           <div className="flex justify-end mb-4">
             <Button onClick={() => generatePlanPDF(plan)} className="gap-2">
@@ -125,6 +131,16 @@ export default function ViewPlan() {
           </div>
           <PlanDocumentPreview plan={plan} />
         </TabsContent>
+
+        <TabsContent value="spd" className="mt-6">
+          <div className="flex justify-end mb-4">
+            <Button onClick={() => generatePlanPDF(plan)} variant="outline" className="gap-2">
+              <Download className="w-4 h-4" /> Download Full PDF
+            </Button>
+          </div>
+          <ErisaWrapPreview plan={plan} />
+        </TabsContent>
+
         <TabsContent value="history" className="mt-6">
           <div className="bg-card rounded-xl border p-6 md:p-8 shadow-sm">
             <div className="mb-5">

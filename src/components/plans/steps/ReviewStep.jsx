@@ -1,5 +1,8 @@
 import { PLAN_TYPE_INFO } from "../PlanTypeCard";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Shield } from "lucide-react";
 import { format } from "date-fns";
 
 function Field({ label, value }) {
@@ -45,7 +48,7 @@ function formatDate(d) {
   return format(new Date(d + "T00:00:00"), "MMMM d, yyyy");
 }
 
-export default function ReviewStep({ data }) {
+export default function ReviewStep({ data, onChange }) {
   const planType = data.plan_type;
   const showFSA = ["health_fsa", "full_flex", "simple_cafeteria"].includes(planType);
   const showLimitedFSA = planType === "limited_fsa";
@@ -149,6 +152,25 @@ export default function ReviewStep({ data }) {
         <Field label="Filing Deadline" value={data.claims_filing_deadline} />
         <Field label="Employer Contribution" value={data.employer_contribution ? data.employer_contribution_amount || "Yes" : "None"} />
       </Section>
+
+      {/* ERISA SPD toggle */}
+      <div className="flex items-start gap-4 p-4 rounded-xl border bg-primary/5 border-primary/15">
+        <Shield className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+        <div className="flex-1 min-w-0">
+          <Label htmlFor="review-spd-toggle" className="text-sm font-semibold cursor-pointer">
+            Include ERISA Wrap SPD in Document Package
+          </Label>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Appends the full ERISA Wrap Summary Plan Description to the downloadable PDF. Recommended for all plans subject to ERISA.
+          </p>
+        </div>
+        <Switch
+          id="review-spd-toggle"
+          checked={data.include_erisa_spd ?? true}
+          onCheckedChange={onChange ? (v) => onChange({ ...data, include_erisa_spd: v }) : undefined}
+          disabled={!onChange}
+        />
+      </div>
     </div>
   );
 }

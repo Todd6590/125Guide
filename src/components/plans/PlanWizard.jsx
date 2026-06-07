@@ -60,7 +60,7 @@ export default function PlanWizard({ initialData, onSave, onAutoSave, saving }) 
       case 2: return <PlanDetailsStep data={data} onChange={setData} />;
       case 3: return <EligibilityStep data={data} onChange={setData} />;
       case 4: return <BenefitsStep data={data} onChange={setData} />;
-      case 5: return <ReviewStep data={data} />;
+      case 5: return <ReviewStep data={data} onChange={setData} />;
       default: return null;
     }
   };

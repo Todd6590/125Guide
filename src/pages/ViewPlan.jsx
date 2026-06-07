@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import { ArrowLeft, Pencil, Trash2, FileText, Loader2, Download, History, Shield, Sparkles } from "lucide-react";
 import { generatePlanPDF } from "@/lib/generatePlanPDF";
 import { toast } from "sonner";
@@ -36,6 +38,11 @@ export default function ViewPlan() {
   });
 
   const plan = plans.find((p) => p.id === planId);
+
+  const toggleSpdMutation = useMutation({
+    mutationFn: (include) => base44.entities.PlanDocument.update(planId, { include_erisa_spd: include }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["plans"] }),
+  });
 
   const handleDelete = async () => {
     await base44.entities.PlanDocument.delete(planId);
@@ -124,7 +131,20 @@ export default function ViewPlan() {
         </TabsContent>
 
         <TabsContent value="document" className="mt-6">
-          <div className="flex justify-end mb-4">
+          <div className="flex items-center justify-between mb-4 gap-4 flex-wrap">
+            <div className="flex items-center gap-3 bg-card border rounded-lg px-4 py-2.5">
+              <Shield className="w-4 h-4 text-primary flex-shrink-0" />
+              <div>
+                <Label htmlFor="spd-toggle" className="text-sm font-medium cursor-pointer">Include ERISA Wrap SPD</Label>
+                <p className="text-xs text-muted-foreground">Append the SPD to the downloaded PDF package</p>
+              </div>
+              <Switch
+                id="spd-toggle"
+                checked={plan.include_erisa_spd ?? true}
+                onCheckedChange={(v) => toggleSpdMutation.mutate(v)}
+                disabled={toggleSpdMutation.isPending}
+              />
+            </div>
             <Button onClick={() => generatePlanPDF(plan)} className="gap-2">
               <Download className="w-4 h-4" /> Download PDF
             </Button>
@@ -133,7 +153,17 @@ export default function ViewPlan() {
         </TabsContent>
 
         <TabsContent value="spd" className="mt-6">
-          <div className="flex justify-end mb-4">
+          <div className="flex items-center justify-between mb-4 gap-4 flex-wrap">
+            <div className="flex items-center gap-2.5 bg-card border rounded-lg px-4 py-2.5">
+              <Switch
+                checked={plan.include_erisa_spd ?? true}
+                onCheckedChange={(v) => toggleSpdMutation.mutate(v)}
+                disabled={toggleSpdMutation.isPending}
+              />
+              <span className="text-sm text-muted-foreground">
+                {plan.include_erisa_spd ?? true ? "SPD included in PDF package" : "SPD excluded from PDF package"}
+              </span>
+            </div>
             <Button onClick={() => generatePlanPDF(plan)} variant="outline" className="gap-2">
               <Download className="w-4 h-4" /> Download Full PDF
             </Button>

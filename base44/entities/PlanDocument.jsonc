@@ -32,6 +32,11 @@
       "default": false,
       "description": "Whether this is a sample/demo plan document"
     },
+    "include_erisa_spd": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to include the ERISA Wrap SPD in the generated PDF package"
+    },
     "employer_name": {
       "type": "string",
       "description": "Legal name of the employer/company"

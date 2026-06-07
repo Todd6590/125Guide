@@ -30,7 +30,8 @@ const ENTRY_TEXT = {
   annual: "on the first day of each Plan Year coinciding with or next following the date eligibility requirements are satisfied",
 };
 
-export function generatePlanPDF(plan) {
+export function generatePlanPDF(plan, options = {}) {
+  const includeSpd = options.includeSpd ?? plan.include_erisa_spd ?? true;
   const p = plan;
   const doc = new jsPDF({ unit: "pt", format: "letter" });
   const typeInfo = PLAN_TYPE_INFO[p.plan_type] || {};
@@ -251,6 +252,46 @@ export function generatePlanPDF(plan) {
   addBoldParagraph("7.6 No Guarantee of Employment. ", "Nothing in this Plan shall be construed as a contract of employment or as granting any Employee the right to continued employment.");
 
   // ── ERISA WRAP SPD ──
+  if (!includeSpd) {
+    // Skip SPD — jump to signature
+    checkPageBreak(160);
+    addDivider();
+    addHeading2("ADOPTION OF PLAN");
+    addParagraph(`IN WITNESS WHEREOF, ${blank(p.employer_name)} has caused this Plan to be executed on this _____ day of ____________, ______.`);
+    addSpacer(30);
+
+    const col1X = marginL;
+    const lineY1 = y + 40;
+    const lineY2 = y + 80;
+    const lineY3 = y + 120;
+    const lineWidth = contentW * 0.45;
+
+    doc.setDrawColor(120, 120, 120);
+    doc.setLineWidth(0.5);
+    doc.line(col1X, lineY1, col1X + lineWidth, lineY1);
+    doc.line(col1X, lineY2, col1X + lineWidth, lineY2);
+    doc.line(col1X, lineY3, col1X + lineWidth, lineY3);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8);
+    doc.setTextColor(120, 120, 120);
+    doc.text("Signature of Authorized Representative", col1X, lineY1 + 10);
+    doc.text("Print Name and Title", col1X, lineY2 + 10);
+    doc.text("Date", col1X, lineY3 + 10);
+
+    const fileName = `${(p.plan_name || "plan-document").replace(/\s+/g, "-").toLowerCase()}.pdf`;
+    const blob = doc.output("blob");
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    return;
+  }
+
   doc.addPage();
   y = 72;
 
